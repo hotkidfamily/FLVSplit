@@ -1,6 +1,6 @@
 # FLVExtract
   * Base On [FlvExtract](https://github.com/flagbug/FlvExtract)
-  * Support HEVC
+  * Support HEVC for codec id 0x09 or 0x0D (always using in **CDN**)
 
 ## License
   * [GNU General Public License version 2 (GPLv2)](https://opensource.org/licenses/gpl-2.0)
