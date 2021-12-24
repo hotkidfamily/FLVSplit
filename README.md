@@ -18,4 +18,4 @@ This library is a PCL port of the FlvExtract library from J.D. Purcell (http://m
   * 基于 [FlvExtract](https://github.com/flagbug/FlvExtract) 修改
   * 支持 codec id 为 09 或者 12 的 HEVC flv 视频流，通常用于 **CDN**
   * 支持导出为 .h264 .h265 .aac 等等
-  * 支持导出 pts、dts、及他们的 diff 用于排障
+  * 支持导出 pts、dts、pts-dts、dts-dts 用于排障
