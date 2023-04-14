@@ -20,6 +20,7 @@
 // --------------------------------------------------------------------------------
 
 using System;
+using System.Runtime.Versioning;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -58,10 +59,11 @@ namespace JDP {
 		}
 
 		private void btnAbout_Click(object sender, EventArgs e) {
-			string text = String.Format("FLV Extract v{1}{0}Copyright {2} J.D. Purcell{0}{3}",
+			string text = String.Format("FLV Extract v{1}{0}Copyright {2} {3} {0}{4}",
 				Environment.NewLine,
 				VersionInfo.DisplayVersion,
 				VersionInfo.CopyrightYears,
+				VersionInfo.Authors,
 				VersionInfo.Website);
 			MessageBox.Show(this, text, "About", MessageBoxButtons.OK, MessageBoxIcon.Information);
 		}

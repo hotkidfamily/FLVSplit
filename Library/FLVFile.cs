@@ -22,6 +22,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace JDP {
@@ -187,7 +188,7 @@ namespace JDP {
 		}
 
 		private bool ReadTag() {
-			uint tagType, dataSize, timeStamp, streamID, mediaInfo;
+			uint tagType, dataSize, timeStamp, streamID, mediaInfo, avcPacketType;
 			byte[] data;
 
 			if ((_fileLength - _fileOffset) < 11) {
@@ -210,7 +211,8 @@ namespace JDP {
 			}
 
 			mediaInfo = ReadUInt8();
-            UInt32 composition = GetUInt32();
+			UInt32 composition = GetUInt32();
+			avcPacketType = (composition >> 24) & 0xff;
             UInt32 tempv = composition & 0x00ffffff;
             Int32 compositionTime = (Int32)((tempv & 0x00800000) << 8 | (tempv & 0x007fffff));
             Int32 pts = (Int32)timeStamp + compositionTime;
@@ -242,7 +244,7 @@ namespace JDP {
                     diff = timeStamp - lastTimeStamp;
                 }
 				_videoTimeStamps.Add(timeStamp);
-				_videoWriter.WriteChunk(data, timeStamp, (int)((mediaInfo & 0xF0) >> 4));
+                _videoWriter.WriteChunk(data, timeStamp, (int)((mediaInfo & 0xF0) >> 4));
                 _timeCodeWriter.Write(timeStamp, diff, pts, compositionTime);
 			}
 
@@ -1019,29 +1021,159 @@ namespace JDP {
 
         private string _path;
         private FileStream _fs;
+        private int _nalLengthSize = 4;
+
+        enum HEVCNalType : int
+        {
+            TRAIL_N = 0,
+            TRAIL_R = 1,
+            TSA_N = 2,
+            TSA_R = 3,
+            STSA_N = 4,
+            STSA_R = 5,
+            RADL_N = 6,
+            RADL_R = 7,
+            RASL_N = 8,
+            RASL_R = 9,
+            VCL_N10 = 10,
+            VCL_R11 = 11,
+            VCL_N12 = 12,
+            VCL_R13 = 13,
+            VCL_N14 = 14,
+            VCL_R15 = 15,
+            BLA_W_LP = 16,
+            BLA_W_RADL = 17,
+            BLA_N_LP = 18,
+            IDR_W_RADL = 19,
+            IDR_N_LP = 20,
+            CRA_NUT = 21,
+            RSV_IRAP_VCL22 = 22,
+            RSV_IRAP_VCL23 = 23,
+            RSV_VCL24 = 24,
+            RSV_VCL25 = 25,
+            RSV_VCL26 = 26,
+            RSV_VCL27 = 27,
+            RSV_VCL28 = 28,
+            RSV_VCL29 = 29,
+            RSV_VCL30 = 30,
+            RSV_VCL31 = 31,
+            VPS = 32,
+            SPS = 33,
+            PPS = 34,
+            AUD = 35,
+            EOS_NUT = 36,
+            EOB_NUT = 37,
+            FD_NUT = 38,
+            SEI_PREFIX = 39,
+            SEI_SUFFIX = 40,
+            RSV_NVCL41 = 41,
+            RSV_NVCL42 = 42,
+            RSV_NVCL43 = 43,
+            RSV_NVCL44 = 44,
+            RSV_NVCL45 = 45,
+            RSV_NVCL46 = 46,
+            RSV_NVCL47 = 47,
+            UNSPEC48 = 48,
+            UNSPEC49 = 49,
+            UNSPEC50 = 50,
+            UNSPEC51 = 51,
+            UNSPEC52 = 52,
+            UNSPEC53 = 53,
+            UNSPEC54 = 54,
+            UNSPEC55 = 55,
+            UNSPEC56 = 56,
+            UNSPEC57 = 57,
+            UNSPEC58 = 58,
+            UNSPEC59 = 59,
+            UNSPEC60 = 60,
+            UNSPEC61 = 61,
+            UNSPEC62 = 62,
+            UNSPEC63 = 63,
+        };
+        enum HVCCPayloadOffset : int
+        {
+            lengthSizeMinusOne = 21,
+			numOfArrays = 22,
+		};
 
         public RawH265Writer(string path)
         {
             _path = path;
-            _fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read, 65536);
+            _fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.Read, 1*1024*1024);
         }
 
         public void WriteChunk(byte[] chunk, uint timeStamp, int frameType)
         {
             if (chunk.Length < 4) return;
 
-            if (chunk[0] == 0)
-            { // Headers vps sps pps 
+			int v1 = BitConverter.ToInt32(chunk, 4);
+            int v2 = BitConverter.ToInt32(_startCode, 0);
+
+            if (v1 == v2) // annexb format
+            {
+                if (chunk[0] == 0)
+                { // Headers vps sps pps 
+                    if (chunk.Length < 10) return;
+                    int offset = 4;
+                    int len = chunk.Length - offset;
+                    _fs.Write(chunk, offset, len);
+                }
+                else
+                { // Video data
+                    int offset = 4;
+                    int len = chunk.Length - offset;
+                    _fs.Write(chunk, offset, len);
+                }
+            }
+            else if (chunk[0] == 0)
+            { // Headers HVCCDecoderConfigurationRecord
                 if (chunk.Length < 10) return;
-                int offset = 4;
-                int len = chunk.Length - offset;
-                _fs.Write(chunk, offset, len);
+
+                int offset, vpsCount = 0, spsCount = 0, ppsCount = 0, nalArrays;
+
+                offset = (int)HVCCPayloadOffset.lengthSizeMinusOne + 4;
+                _nalLengthSize = (chunk[offset++] & 0x03) + 1;
+
+				offset = (int)HVCCPayloadOffset.numOfArrays + 4;
+				nalArrays = chunk[offset++];
+
+				for (int i = 0; i < nalArrays; i++) {
+					int nalType = chunk[offset++] & 0x3f;
+                    int numNalus = (int)BitConverterBE.ToUInt16(chunk, offset);
+					offset += 2;
+
+					if (nalType == (int)HEVCNalType.VPS)
+						vpsCount++;
+                    if (nalType == (int)HEVCNalType.SPS)
+                        spsCount++;
+					if (nalType == (int)HEVCNalType.PPS)
+                        ppsCount++;
+
+                    for (int j = 0; j < numNalus; j++)
+					{
+                        int len = (int)BitConverterBE.ToUInt16(chunk, offset);
+						offset += 2;
+                        _fs.Write(_startCode, 0, _startCode.Length);
+                        _fs.Write(chunk, offset, len);
+						offset += len;
+                    }
+                }
             }
             else
             { // Video data
                 int offset = 4;
-                int len = chunk.Length - offset;
-                _fs.Write(chunk, offset, len);
+
+                while (offset <= chunk.Length - _nalLengthSize)
+                {
+                    int len = (_nalLengthSize == 2) ?
+                        (int)BitConverterBE.ToUInt16(chunk, offset) :
+                        (int)BitConverterBE.ToUInt32(chunk, offset);
+                    offset += _nalLengthSize;
+                    if (offset + len > chunk.Length) break;
+                    _fs.Write(_startCode, 0, _startCode.Length);
+                    _fs.Write(chunk, offset, len);
+                    offset += len;
+                }
             }
         }
 

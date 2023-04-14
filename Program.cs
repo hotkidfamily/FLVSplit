@@ -13,8 +13,8 @@ namespace JDP {
 
 		public static void SetFontAndScaling(Form form) {
 			form.SuspendLayout();
-			form.Font = new Font("Tahoma", 8.25f);
-			if (form.Font.Name != "Tahoma") form.Font = new Font("Arial", 8.25f);
+			form.Font = new Font("Tahoma", 10.5f);
+			if (form.Font.Name != "Tahoma") form.Font = new Font("Arial", 10.5f);
 			form.AutoScaleMode = AutoScaleMode.Font;
 			form.AutoScaleDimensions = new SizeF(6f, 13f);
 			form.ResumeLayout(false);

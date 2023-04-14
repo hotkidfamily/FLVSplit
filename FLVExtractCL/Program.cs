@@ -36,7 +36,7 @@ namespace JDP {
 			string inputPath;
 
 			Console.WriteLine("FLV Extract CL v" + VersionInfo.DisplayVersion);
-			Console.WriteLine("Copyright " + VersionInfo.CopyrightYears + " J.D. Purcell");
+			Console.WriteLine("Copyright " + VersionInfo.CopyrightYears + VersionInfo.Authors);
 			Console.WriteLine(VersionInfo.Website);
 			Console.WriteLine();
 

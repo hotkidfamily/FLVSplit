@@ -24,11 +24,13 @@ using System.Reflection;
 
 namespace JDP {
 	public static class VersionInfo {
-		public const string AssemblyVersion = "1.6.0.5";
-		public const string CopyrightYears = "2006-2015";
+		public const string AssemblyVersion = "1.7.0.1";
+		public const string CopyrightYears = "2006-2015£¬2018~2023";
 		public const string Website = "http://www.moitah.net/";
+		public const string Authors = " J.D. Purcell, Hotkid";
 
-		public static string DisplayVersion {
+
+        public static string DisplayVersion {
 			get {
 				Version ver = new Version(AssemblyVersion);
 				return ver.Major + "." + ver.Minor + "." + ver.Revision;

@@ -10,7 +10,7 @@ using JDP;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Copyright " + VersionInfo.CopyrightYears + " J.D. Purcell")]
+[assembly: AssemblyCopyright("Copyright " + VersionInfo.CopyrightYears + VersionInfo.Authors)]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
