@@ -24,8 +24,9 @@ This library is a PCL port of the FlvExtract library from J.D. Purcell (http://m
 
 ## changelog
 
-- 2023/4/14
-  - add HVCCDecoderConfigurationRecord support
+- 1.7.0 (2023/4/14)
+  - feat: add HVCCDecoderConfigurationRecord support
+  - UI: big fonts
 - Ancient
   - HEVC support
   - dts、pts output 
