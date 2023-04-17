@@ -121,7 +121,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings1.cs" />
     <Compile Include="TimeInfo.cs" />
     <EmbeddedResource Include="frmMain.resx">
       <SubType>Designer</SubType>
