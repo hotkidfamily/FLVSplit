@@ -32,6 +32,7 @@ namespace JDP {
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCopyFrameRates = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
+            this.btnShowTimestamp = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lvStatus
@@ -115,11 +116,25 @@ namespace JDP {
             this.btnStop.UseVisualStyleBackColor = true;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
+            // btnShowTimestamp
+            // 
+            this.btnShowTimestamp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnShowTimestamp.Enabled = false;
+            this.btnShowTimestamp.Location = new System.Drawing.Point(143, 369);
+            this.btnShowTimestamp.Name = "btnShowTimestamp";
+            this.btnShowTimestamp.Size = new System.Drawing.Size(146, 33);
+            this.btnShowTimestamp.TabIndex = 4;
+            this.btnShowTimestamp.Text = "Sho&w Timestamp";
+            this.btnShowTimestamp.UseVisualStyleBackColor = true;
+            this.btnShowTimestamp.Click += new System.EventHandler(this.btnShowTimestamp_Click);
+
+            // 
             // frmStatus
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(949, 410);
+            this.Controls.Add(this.btnShowTimestamp);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnCopyFrameRates);
             this.Controls.Add(this.btnOK);
@@ -147,5 +162,6 @@ namespace JDP {
 		private System.Windows.Forms.Button btnOK;
 		private System.Windows.Forms.Button btnCopyFrameRates;
 		private System.Windows.Forms.Button btnStop;
-	}
+        private System.Windows.Forms.Button btnShowTimestamp;
+    }
 }

@@ -4,9 +4,18 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using System.Globalization;
+using CsvHelper;
+using CsvHelper.Configuration;
+using static System.Net.Mime.MediaTypeNames;
+using System.Linq;
+using System.Collections.Generic;
+using static System.Windows.Forms.DataFormats;
+
 
 namespace JDP {
-	internal partial class frmStatus : Form {
+
+    internal partial class frmStatus : Form {
 		private Thread _workThread;
 		private volatile string[] _paths;
 		private volatile bool _stop;
@@ -15,8 +24,8 @@ namespace JDP {
 		private volatile bool _extractTimeCodes;
 		private bool _overwriteAll;
 		private bool _overwriteNone;
-
-		public frmStatus(string[] paths, bool extractVideo, bool extractAudio, bool extractTimeCodes) {
+        private Thread _timeThread;
+        public frmStatus(string[] paths, bool extractVideo, bool extractAudio, bool extractTimeCodes) {
 			InitializeComponent();
 			int initialWidth = ClientSize.Width;
 			Program.SetFontAndScaling(this);
@@ -177,6 +186,7 @@ namespace JDP {
 				btnStop.Visible = false;
 				btnCopyFrameRates.Enabled = true;
 				btnOK.Enabled = true;
+				btnShowTimestamp.Enabled = true;
 			});
 		}
 
@@ -185,5 +195,48 @@ namespace JDP {
 			Warning,
 			Error
 		}
-	}
+
+        class TimeinfoMap : ClassMap<TimeInfo>
+        {
+            public TimeinfoMap()
+            {
+                Map(m => m.dts).Name("dts");
+                Map(m => m.dtsStep).Name("dts-step");
+                Map(m => m.pts).Name("pts");
+                Map(m => m.composTime).Name("pts-dts");
+            }
+        }
+        private void btnShowTimestamp_Click(object sender, EventArgs e)
+        {
+
+			string csvPath = Path.Combine(Path.GetDirectoryName(_paths[0]), Path.GetFileNameWithoutExtension(_paths[0]));
+			csvPath = csvPath + ".txt";
+            List<TimeInfo> records = new List<TimeInfo>();
+
+			var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+				AllowComments = true,
+                Comment = '#',
+			};
+
+            using (var reader = new StreamReader(csvPath))
+			using (var csv = new CsvReader(reader, config))
+			{
+                csv.Context.RegisterClassMap<TimeinfoMap>();
+				records = csv.GetRecords<TimeInfo>().ToList();
+                _timeThread = new Thread(delegate () {
+                    Invoke((MethodInvoker)delegate () {
+                        using (frmTimeinfo statusForm = new frmTimeinfo(records))
+                        {
+                            bool topMost = TopMost;
+                            TopMost = false;
+                            statusForm.ShowDialog(this);
+                            TopMost = topMost;
+                        }
+                    });
+                });
+                _timeThread.Start();
+            }
+		}
+    }
 }
