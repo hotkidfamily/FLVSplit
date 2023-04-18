@@ -54,6 +54,7 @@ namespace JDP {
             this.lvStatus.TabIndex = 0;
             this.lvStatus.UseCompatibleStateImageBehavior = false;
             this.lvStatus.View = System.Windows.Forms.View.Details;
+            this.lvStatus.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.lvStatus_ItemSelectionChanged);
             this.lvStatus.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvStatus_MouseDoubleClick);
             // 
             // chStatus
@@ -127,7 +128,6 @@ namespace JDP {
             this.btnShowTimestamp.Text = "Sho&w Timestamp";
             this.btnShowTimestamp.UseVisualStyleBackColor = true;
             this.btnShowTimestamp.Click += new System.EventHandler(this.btnShowTimestamp_Click);
-
             // 
             // frmStatus
             // 

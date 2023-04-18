@@ -4,13 +4,8 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using System.Globalization;
-using CsvHelper;
-using CsvHelper.Configuration;
-using static System.Net.Mime.MediaTypeNames;
-using System.Linq;
 using System.Collections.Generic;
-using static System.Windows.Forms.DataFormats;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
 namespace JDP {
@@ -45,7 +40,7 @@ namespace JDP {
 			AddToImageListFromResource(imageList, Properties.Resources.Warning);
 			AddToImageListFromResource(imageList, Properties.Resources.Error);
 			lvStatus.SmallImageList = imageList;
-		}
+        }
 
 		private void frmStatus_Shown(object sender, EventArgs e) {
 			Activate();
@@ -186,8 +181,9 @@ namespace JDP {
 				btnStop.Visible = false;
 				btnCopyFrameRates.Enabled = true;
 				btnOK.Enabled = true;
-				btnShowTimestamp.Enabled = true;
-			});
+				btnShowTimestamp.Enabled = false;
+                lvStatus.Items[0].Selected = true;
+            });
 		}
 
 		private enum IconIndex {
@@ -196,37 +192,27 @@ namespace JDP {
 			Error
 		}
 
-        class TimeinfoMap : ClassMap<TimeInfo>
-        {
-            public TimeinfoMap()
-            {
-                Map(m => m.dts).Name("dts");
-                Map(m => m.dtsStep).Name("dts-step");
-                Map(m => m.pts).Name("pts");
-                Map(m => m.composTime).Name("pts-dts");
-            }
-        }
+
         private void btnShowTimestamp_Click(object sender, EventArgs e)
         {
+			int selectIdx = 0;
+			if(lvStatus.SelectedItems.Count > 0)
+			{
+				selectIdx = lvStatus.SelectedItems[0].Index;
+			}
+			else
+			{
+				return;
+			}
 
-			string csvPath = Path.Combine(Path.GetDirectoryName(_paths[0]), Path.GetFileNameWithoutExtension(_paths[0]));
-			csvPath = csvPath + ".txt";
+            string csvPath = Path.Combine(Path.GetDirectoryName(_paths[0]), Path.GetFileNameWithoutExtension(_paths[0]));
+            csvPath = csvPath + ".txt";
             List<TimeInfo> records = new List<TimeInfo>();
 
-			var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
-				AllowComments = true,
-                Comment = '#',
-			};
-
-            using (var reader = new StreamReader(csvPath))
-			using (var csv = new CsvReader(reader, config))
-			{
-                csv.Context.RegisterClassMap<TimeinfoMap>();
-				records = csv.GetRecords<TimeInfo>().ToList();
                 _timeThread = new Thread(delegate () {
                     Invoke((MethodInvoker)delegate () {
-                        using (frmTimeinfo timeform = new frmTimeinfo(ref records))
+                        using (frmTimeinfo timeform = new frmTimeinfo(csvPath))
                         {
                             bool topMost = TopMost;
                             TopMost = false;
@@ -237,6 +223,13 @@ namespace JDP {
                 });
                 _timeThread.Start();
             }
-		}
+        }
+
+        private void lvStatus_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            Invoke((MethodInvoker)delegate () {
+                btnShowTimestamp.Enabled = e.IsSelected;
+            });
+        }
     }
 }

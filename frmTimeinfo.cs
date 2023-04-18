@@ -1,26 +1,47 @@
-﻿using System;
+﻿using CsvHelper.Configuration;
+using CsvHelper;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace JDP
 {
+
     public partial class frmTimeinfo : Form
     {
         List<TimeInfo> _records = null;
         private List<ListViewItem> _items = null;
 
-        public frmTimeinfo(ref List<TimeInfo> records)
+        class TimeinfoMap : ClassMap<TimeInfo>
         {
-            _records = records;
+            public TimeinfoMap()
+            {
+                Map(m => m.dts).Name("dts");
+                Map(m => m.dtsStep).Name("dts-step");
+                Map(m => m.pts).Name("pts");
+                Map(m => m.composTime).Name("pts-dts");
+            }
+        }
+
+
+        public frmTimeinfo(string csvPath)
+        {
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                AllowComments = true,
+                Comment = '#',
+            };
+
+            using (var reader = new StreamReader(csvPath))
+            using (var csv = new CsvReader(reader, config))
+            {
+                csv.Context.RegisterClassMap<TimeinfoMap>();
+                _records = csv.GetRecords<TimeInfo>().ToList();
+            }
+
             _items = new List<ListViewItem>();
             for (int i = 0; i < _records.Count(); i++)
             {
@@ -35,6 +56,7 @@ namespace JDP
         {
             Activate();
             lvTime.VirtualListSize = _records.Count;
+            lvTime.Items[0].Selected = true;
         }
         private void frmTimeinfo_FormClosing(object sender, FormClosingEventArgs e)
         {
