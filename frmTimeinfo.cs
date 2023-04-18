@@ -9,47 +9,66 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace JDP
 {
     public partial class frmTimeinfo : Form
     {
-        private Thread _workThread;
-        List<TimeInfo> _records;
+        List<TimeInfo> _records = null;
+        private List<ListViewItem> _items = null;
 
-        public frmTimeinfo(List<TimeInfo> records)
+        public frmTimeinfo(ref List<TimeInfo> records)
         {
             _records = records;
+            _items = new List<ListViewItem>();
+            for (int i = 0; i < _records.Count(); i++)
+            {
+                _items.Add(new ListViewItem(new string[] { i.ToString(), " ", _records[i].dts,
+                        _records[i].dtsStep, _records[i].pts, _records[i].composTime, }));
+            }
+
             InitializeComponent();
         }
 
         private void frmTimeinfo_Shown(object sender, EventArgs e)
         {
             Activate();
-
-            _workThread = new Thread(ExtractTimeThread);
-            _workThread.Start();
+            lvTime.VirtualListSize = _records.Count;
         }
         private void frmTimeinfo_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if ((_workThread != null) && _workThread.IsAlive)
+
+        }
+
+        private void frmTimeinfo_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _items = null;
+        }
+
+        private void lvTime_VirtualItemsSelectionRangeChanged(object sender, ListViewVirtualItemsSelectionRangeChangedEventArgs e)
+        {
+        }
+
+        private void lvTime_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
+        {
+            if ((_items != null) && (e.ItemIndex <= _items.Count))
             {
-                e.Cancel = true;
+                e.Item = _items[e.ItemIndex];
+            }
+            else { 
+                e.Item = new ListViewItem(); 
             }
         }
 
-        private void ExtractTimeThread()
+        private void lvTime_CacheVirtualItems(object sender, CacheVirtualItemsEventArgs e)
         {
-            ListViewItem item = null;
 
-            for (int i = 0; i < _records.Count(); i++)
-            {
-                Invoke((MethodInvoker)delegate () { 
-                    item = lvTime.Items.Add(new ListViewItem(new string[] { _records[i].dts.ToString(), 
-                        _records[i].dtsStep.ToString(), _records[i].pts.ToString(), _records[i].composTime.ToString(), }));
-                    item.EnsureVisible();
-                });
-            }
+        }
+
+        private void lvTime_SearchForVirtualItem(object sender, SearchForVirtualItemEventArgs e)
+        {
+
         }
 
     }

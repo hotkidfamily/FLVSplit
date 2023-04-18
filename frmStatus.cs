@@ -226,11 +226,11 @@ namespace JDP {
 				records = csv.GetRecords<TimeInfo>().ToList();
                 _timeThread = new Thread(delegate () {
                     Invoke((MethodInvoker)delegate () {
-                        using (frmTimeinfo statusForm = new frmTimeinfo(records))
+                        using (frmTimeinfo timeform = new frmTimeinfo(ref records))
                         {
                             bool topMost = TopMost;
                             TopMost = false;
-                            statusForm.ShowDialog(this);
+                            timeform.ShowDialog(this);
                             TopMost = topMost;
                         }
                     });
