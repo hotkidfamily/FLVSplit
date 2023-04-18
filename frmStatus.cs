@@ -207,7 +207,6 @@ namespace JDP {
 
             string csvPath = Path.Combine(Path.GetDirectoryName(_paths[0]), Path.GetFileNameWithoutExtension(_paths[0]));
             csvPath = csvPath + ".txt";
-            List<TimeInfo> records = new List<TimeInfo>();
 
             {
                 _timeThread = new Thread(delegate () {

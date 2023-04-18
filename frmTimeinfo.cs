@@ -14,11 +14,24 @@ namespace JDP
     {
         List<TimeInfo> _records = null;
         private List<ListViewItem> _items = null;
+        public class TimeInfo
+        {
+            public string offset { get; set; }
+            public string tagType { get; set; }
+            public string tagSize { get; set; }
+            public string dts { get; set; }
+            public string dtsStep { get; set; }
+            public string pts { get; set; }
+            public string composTime { get; set; }
+        }
 
         class TimeinfoMap : ClassMap<TimeInfo>
         {
             public TimeinfoMap()
             {
+                Map(m => m.offset).Name("offset");
+                Map(m => m.tagType).Name("tagType");
+                Map(m => m.tagSize).Name("tagSize");
                 Map(m => m.dts).Name("dts");
                 Map(m => m.dtsStep).Name("dts-step");
                 Map(m => m.pts).Name("pts");
@@ -45,7 +58,7 @@ namespace JDP
             _items = new List<ListViewItem>();
             for (int i = 0; i < _records.Count(); i++)
             {
-                _items.Add(new ListViewItem(new string[] { i.ToString(), " ", _records[i].dts,
+                _items.Add(new ListViewItem(new string[] { i.ToString(), _records[i].offset, _records[i].tagType, _records[i].tagSize, _records[i].dts,
                         _records[i].dtsStep, _records[i].pts, _records[i].composTime, }));
             }
 
@@ -56,6 +69,14 @@ namespace JDP
         {
             Activate();
             lvTime.VirtualListSize = _records.Count;
+            int initialWidth = ClientSize.Width;
+            Program.SetFontAndScaling(this);
+            float scaleFactorX = (float)ClientSize.Width / initialWidth;
+            int v = Convert.ToInt32(initialWidth * scaleFactorX / (lvTime.Columns.Count + 1));
+            foreach (ColumnHeader columnHeader in lvTime.Columns)
+            {
+                columnHeader.Width = v;
+            }
             lvTime.Items[0].Selected = true;
         }
         private void frmTimeinfo_FormClosing(object sender, FormClosingEventArgs e)

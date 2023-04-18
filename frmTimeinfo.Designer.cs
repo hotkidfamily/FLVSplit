@@ -31,6 +31,8 @@
             this.lvTime = new System.Windows.Forms.ListView();
             this.ch_frameIdx = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch_offset_hex = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ch_tag_type = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ch_tag_size = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch_dts = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch_dts_diff = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch_pts = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -42,6 +44,8 @@
             this.lvTime.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ch_frameIdx,
             this.ch_offset_hex,
+            this.ch_tag_type,
+            this.ch_tag_size,
             this.ch_dts,
             this.ch_dts_diff,
             this.ch_pts,
@@ -73,25 +77,33 @@
             // 
             this.ch_offset_hex.Text = "offset";
             // 
+            // ch_tag_type
+            // 
+            this.ch_tag_type.Text = "Tag Type";
+            // 
+            // ch_tag_size
+            // 
+            this.ch_tag_size.Text = "Tag Size";
+            // 
             // ch_dts
             // 
             this.ch_dts.Text = "dts";
-            this.ch_dts.Width = 120;
+            this.ch_dts.Width = 80;
             // 
             // ch_dts_diff
             // 
             this.ch_dts_diff.Text = "dts-dts";
-            this.ch_dts_diff.Width = 120;
+            this.ch_dts_diff.Width = 80;
             // 
             // ch_pts
             // 
             this.ch_pts.Text = "pts";
-            this.ch_pts.Width = 120;
+            this.ch_pts.Width = 80;
             // 
             // ch_pts_minus_dts
             // 
             this.ch_pts_minus_dts.Text = "pts-dts";
-            this.ch_pts_minus_dts.Width = 120;
+            this.ch_pts_minus_dts.Width = 80;
             // 
             // frmTimeinfo
             // 
@@ -120,5 +132,7 @@
         private System.Windows.Forms.ColumnHeader ch_pts_minus_dts;
         private System.Windows.Forms.ColumnHeader ch_frameIdx;
         private System.Windows.Forms.ColumnHeader ch_offset_hex;
+        private System.Windows.Forms.ColumnHeader ch_tag_type;
+        private System.Windows.Forms.ColumnHeader ch_tag_size;
     }
 }
