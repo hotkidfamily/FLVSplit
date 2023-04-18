@@ -105,6 +105,7 @@
     <Compile Include="frmTimeinfo.Designer.cs">
       <DependentUpon>frmTimeinfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Library\FlvSpecs.cs" />
     <Compile Include="Library\General.cs" />
     <Compile Include="Library\FLVFile.cs" />
     <Compile Include="frmMain.cs">

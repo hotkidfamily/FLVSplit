@@ -205,13 +205,12 @@ namespace JDP {
 				return;
 			}
 
-            string csvPath = Path.Combine(Path.GetDirectoryName(_paths[0]), Path.GetFileNameWithoutExtension(_paths[0]));
-            csvPath = csvPath + ".txt";
+            string binPath = _paths[selectIdx];
 
             {
                 _timeThread = new Thread(delegate () {
                     Invoke((MethodInvoker)delegate () {
-                        using (frmTimeinfo timeform = new frmTimeinfo(csvPath))
+                        using (frmTimeinfo timeform = new frmTimeinfo(binPath))
                         {
                             bool topMost = TopMost;
                             TopMost = false;

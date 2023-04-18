@@ -1660,7 +1660,7 @@ namespace JDP {
 
 		public void Write(long pos, uint type, uint tagSize, uint timeStamp, uint diff = 0, Int32 composite = 0, Int32 delta = 0) {
 			if (_sw != null) {
-                _sw.WriteLine("{0:X},{1:D},{2:D},{3:D},{4:D},{5:D},{6:D}", pos, type, tagSize, timeStamp, diff, composite, delta);
+                _sw.WriteLine("{0:D},{1:D},{2:D},{3:D},{4:D},{5:D},{6:D}", pos, type, tagSize, timeStamp, diff, composite, delta);
 			}
 		}
 
