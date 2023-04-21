@@ -1,4 +1,6 @@
-﻿namespace JDP
+﻿using System.ComponentModel.Design;
+
+namespace JDP
 {
     partial class frmTimeinfo
     {
@@ -28,6 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Tag");
             this.lvTime = new System.Windows.Forms.ListView();
             this.ch_frameIdx = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch_offset_hex = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -37,12 +40,15 @@
             this.ch_dts_diff = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch_pts = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch_pts_minus_dts = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.codecEditbox = new System.Windows.Forms.RichTextBox();
-            this.tagEditbox = new System.Windows.Forms.TextBox();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.tagDetailGroupBox = new System.Windows.Forms.GroupBox();
+            this.tagTreeView = new System.Windows.Forms.TreeView();
+            this.dataGroupBox = new System.Windows.Forms.GroupBox();
+            this.detailGroupBox = new System.Windows.Forms.GroupBox();
+            this.detailTreeView = new System.Windows.Forms.TreeView();
+            this.framesGroupBox = new System.Windows.Forms.GroupBox();
+            this.tagDetailGroupBox.SuspendLayout();
+            this.detailGroupBox.SuspendLayout();
+            this.framesGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // lvTime
@@ -60,10 +66,9 @@
             this.lvTime.FullRowSelect = true;
             this.lvTime.GridLines = true;
             this.lvTime.HideSelection = false;
-            this.lvTime.Location = new System.Drawing.Point(226, 11);
-            this.lvTime.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.lvTime.Location = new System.Drawing.Point(6, 25);
             this.lvTime.Name = "lvTime";
-            this.lvTime.Size = new System.Drawing.Size(804, 651);
+            this.lvTime.Size = new System.Drawing.Size(880, 440);
             this.lvTime.TabIndex = 0;
             this.lvTime.UseCompatibleStateImageBehavior = false;
             this.lvTime.View = System.Windows.Forms.View.Details;
@@ -112,62 +117,89 @@
             this.ch_pts_minus_dts.Text = "pts-dts";
             this.ch_pts_minus_dts.Width = 80;
             // 
-            // groupBox1
+            // tagDetailGroupBox
             // 
-            this.groupBox1.Controls.Add(this.tagEditbox);
-            this.groupBox1.Location = new System.Drawing.Point(12, 11);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(207, 651);
-            this.groupBox1.TabIndex = 3;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Tag";
+            this.tagDetailGroupBox.Controls.Add(this.tagTreeView);
+            this.tagDetailGroupBox.Location = new System.Drawing.Point(903, 477);
+            this.tagDetailGroupBox.Name = "tagDetailGroupBox";
+            this.tagDetailGroupBox.Size = new System.Drawing.Size(415, 337);
+            this.tagDetailGroupBox.TabIndex = 3;
+            this.tagDetailGroupBox.TabStop = false;
+            this.tagDetailGroupBox.Text = "Tag Detail";
             // 
-            // groupBox2
+            // tagTreeView
             // 
-            this.groupBox2.Controls.Add(this.codecEditbox);
-            this.groupBox2.Location = new System.Drawing.Point(1037, 12);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(237, 650);
-            this.groupBox2.TabIndex = 4;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Data";
+            this.tagTreeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tagTreeView.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tagTreeView.Location = new System.Drawing.Point(6, 26);
+            this.tagTreeView.Name = "tagTreeView";
+            treeNode1.Name = "Tag";
+            treeNode1.Text = "Tag";
+            this.tagTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode1});
+            this.tagTreeView.Size = new System.Drawing.Size(403, 299);
+            this.tagTreeView.TabIndex = 0;
             // 
-            // codecEditbox
+            // dataGroupBox
             // 
-            this.codecEditbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.codecEditbox.Location = new System.Drawing.Point(6, 25);
-            this.codecEditbox.Name = "codecEditbox";
-            this.codecEditbox.Size = new System.Drawing.Size(225, 608);
-            this.codecEditbox.TabIndex = 0;
-            this.codecEditbox.Text = "";
+            this.dataGroupBox.Location = new System.Drawing.Point(0, 478);
+            this.dataGroupBox.Name = "dataGroupBox";
+            this.dataGroupBox.Size = new System.Drawing.Size(897, 336);
+            this.dataGroupBox.TabIndex = 4;
+            this.dataGroupBox.TabStop = false;
+            this.dataGroupBox.Text = "Data";
             // 
-            // tagEditbox
+            // detailGroupBox
             // 
-            this.tagEditbox.Location = new System.Drawing.Point(6, 26);
-            this.tagEditbox.Multiline = true;
-            this.tagEditbox.Name = "tagEditbox";
-            this.tagEditbox.Size = new System.Drawing.Size(195, 608);
-            this.tagEditbox.TabIndex = 0;
+            this.detailGroupBox.Controls.Add(this.detailTreeView);
+            this.detailGroupBox.Location = new System.Drawing.Point(903, 0);
+            this.detailGroupBox.Name = "detailGroupBox";
+            this.detailGroupBox.Size = new System.Drawing.Size(415, 471);
+            this.detailGroupBox.TabIndex = 4;
+            this.detailGroupBox.TabStop = false;
+            this.detailGroupBox.Text = "Detail";
+            // 
+            // detailTreeView
+            // 
+            this.detailTreeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.detailTreeView.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.detailTreeView.Location = new System.Drawing.Point(7, 26);
+            this.detailTreeView.Name = "detailTreeView";
+            this.detailTreeView.Size = new System.Drawing.Size(403, 439);
+            this.detailTreeView.TabIndex = 0;
+            // 
+            // framesGroupBox
+            // 
+            this.framesGroupBox.Controls.Add(this.lvTime);
+            this.framesGroupBox.Location = new System.Drawing.Point(0, 0);
+            this.framesGroupBox.Name = "framesGroupBox";
+            this.framesGroupBox.Size = new System.Drawing.Size(897, 471);
+            this.framesGroupBox.TabIndex = 5;
+            this.framesGroupBox.TabStop = false;
+            this.framesGroupBox.Text = "Frames";
             // 
             // frmTimeinfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1280, 666);
-            this.Controls.Add(this.lvTime);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.groupBox2);
-            this.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(1324, 821);
+            this.Controls.Add(this.tagDetailGroupBox);
+            this.Controls.Add(this.framesGroupBox);
+            this.Controls.Add(this.detailGroupBox);
+            this.Controls.Add(this.dataGroupBox);
+            this.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "frmTimeinfo";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Time Information";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmTimeinfo_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmTimeinfo_FormClosed);
+            this.Load += new System.EventHandler(this.frmTimeinfo_Load);
             this.Shown += new System.EventHandler(this.frmTimeinfo_Shown);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
+            this.tagDetailGroupBox.ResumeLayout(false);
+            this.detailGroupBox.ResumeLayout(false);
+            this.framesGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -183,9 +215,12 @@
         private System.Windows.Forms.ColumnHeader ch_offset_hex;
         private System.Windows.Forms.ColumnHeader ch_tag_type;
         private System.Windows.Forms.ColumnHeader ch_tag_size;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.RichTextBox codecEditbox;
-        private System.Windows.Forms.TextBox tagEditbox;
+        private System.Windows.Forms.GroupBox tagDetailGroupBox;
+        private System.Windows.Forms.GroupBox dataGroupBox;
+        private System.Windows.Forms.GroupBox detailGroupBox;
+        private System.Windows.Forms.GroupBox framesGroupBox;
+        private System.Windows.Forms.TreeView tagTreeView;
+        private System.Windows.Forms.TreeView detailTreeView;
+        private System.ComponentModel.Design.ByteViewer dataHexviewer;
     }
 }

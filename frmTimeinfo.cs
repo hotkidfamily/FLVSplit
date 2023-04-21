@@ -7,8 +7,11 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using JDP.Library;
-using System.Text;
 using System.Drawing;
+
+using WpfHexaEditor;
+using WpfHexaEditor.Core;
+using System.ComponentModel.Design;
 
 namespace JDP
 {
@@ -71,6 +74,19 @@ namespace JDP
             }
 
             InitializeComponent();
+            ByteViewer bv = new ByteViewer();
+            bv.Name = "dataByteViewer";
+            bv.TabStop = false;
+            bv.SetColumn(bv, 16);
+            bv.Font = new System.Drawing.Font("Segoe UI", 11.0F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+
+            bv.SetDisplayMode(DisplayMode.Hexdump);
+            bv.SetColumnSpan(bv, 5);
+            bv.VerticalScroll.Enabled = true;
+            bv.VerticalScroll.Visible = true;
+            bv.Dock = DockStyle.Fill; 
+            dataHexviewer = bv;
+            dataGroupBox.Controls.Add(bv);
         }
 
         private void frmTimeinfo_Shown(object sender, EventArgs e)
@@ -120,6 +136,91 @@ namespace JDP
         {
 
         }
+        private void FillTagTreeView(ref FlvTag tag)
+        {
+            tagTreeView.Nodes.Clear();
+
+            TreeNode root = new TreeNode("FLVTag");
+            root.NodeFont = new Font("Segoe UI", 10.5f, FontStyle.Bold);
+            root.Nodes.Add("Tag Type: " + tag.tagType); 
+            root.Nodes.Add("Data Size: " + tag.dataSize);
+            root.Nodes.Add("Timestamp: " + tag.timestamp);
+            root.Nodes.Add("Stream ID: " + tag.streamID);
+
+            if (tag.v.frametype != "")
+            {
+                TreeNode vNode = new TreeNode("Video");
+                vNode.NodeFont = new Font("Segoe UI", 10.5f, FontStyle.Bold);
+                vNode.Nodes.Add("FrameType: " + tag.v.frametype);
+                vNode.Nodes.Add("Codec ID: " + tag.v.codecID);
+                vNode.Nodes.Add("AVC Packet Type: " + tag.v.avcPacketType);
+                vNode.Nodes.Add("Composition Time: " + tag.v.compositionTime);
+                root.Nodes.Add(vNode);
+            }
+
+            if (tag.a.soundFormat != 0)
+            {
+                TreeNode aNode = new TreeNode("Audio");
+                aNode.NodeFont = new Font("Segoe UI", 10.5f, FontStyle.Bold);
+                aNode.Nodes.Add("Format: " + tag.a.soundFormat);
+                aNode.Nodes.Add("Rate: " + tag.a.soundRate);
+                aNode.Nodes.Add("Size: " + tag.a.soundSize);
+                aNode.Nodes.Add("Channel: " + tag.a.soundType);
+                aNode.Nodes.Add("AAC Packet Type: " + tag.a.aacPacketType);
+                root.Nodes.Add(aNode);
+            }
+
+/*            if (tag.data != null)
+            {
+                TreeNode dNode = new TreeNode("Data");
+                dNode.Nodes.Add("Data: " + BitConverter.ToString(tag.data));
+                root.Nodes.Add(dNode);
+            }*/
+
+            root.Nodes.Add("Preview Tag Size: " + tag.previousTagSize);
+            tagTreeView.Nodes.Add(root);
+            tagTreeView.ExpandAll();
+        }
+        private void FillDetailTreeView(ref FlvTag tag)
+        {
+            detailTreeView.Nodes.Clear();
+
+            TreeNode root = new TreeNode();
+            if (tag.v.frametype != "")
+            {
+                root = new TreeNode("VideoData");
+                root.NodeFont = new Font("Segoe UI", 10.5f, FontStyle.Bold);
+                root.Nodes.Add("Nalus: " + tag.v.NALUs);
+            }
+            detailTreeView.Nodes.Add(root);
+            detailTreeView.ExpandAll();
+        }
+        private void FillBinaryDataView(ref FlvTag tag)
+        {
+            WpfHexaEditor.HexEditor editor = new WpfHexaEditor.HexEditor();
+            if (tag.data != null)
+            {
+                //codecEditbox.Clear();
+                string nal = BitConverter.ToString(tag.data, 0, Math.Min(tag.data.Count<byte>(), 72));
+
+                string tagText = nal.Substring(0, 33);
+                string videoTagText = nal.Substring(33, 14);
+                string nalText = nal.Substring(47, nal.Length - 47);
+
+                // 构造Rtf格式的文本
+                string rtfText = "{\\rtf1\\ansi\\deff0 {\\colortbl;\\red255\\green0\\blue0;\\red0\\green200\\blue40;\\red0\\green0\\blue0;}"; // 开始标记，定义颜色表
+                rtfText += $"{{\\cf1 {tagText}}}";
+                rtfText += $"{{\\cf2 {videoTagText}}}";
+                rtfText += $"{{\\cf0 {nalText}}}";
+                rtfText += "}"; // 结束标记
+
+                // 在RichTextBox控件中显示Rtf格式的文本
+                //codecEditbox.Rtf = rtfText;
+
+                dataHexviewer.ResetText();
+                dataHexviewer.SetBytes(tag.data);
+            }
+        }
 
         private void lvTime_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
@@ -129,44 +230,15 @@ namespace JDP
                 long offset = long.Parse(_records[e.ItemIndex].offset);
                 FlvTag tag = new FlvTag();
                 flvSpecs.parseTag(offset, ref tag);
-
-                string result = String.Format("Tag = {0}\r\nDataSize = {1}\r\nTimestamp = {2}\r\nstreamID = {3}\r\n", 
-                    tag.tagType == 8 ? "audio" : "video", tag.dataSize, tag.timestamp, tag.streamID);
-
-                if(tag.tagType == 9)
-                {
-                    string vd = String.Format("📽️FrameType = {0}\r\n📽️CodecID = {1}\r\n📽️PacketType = {2}\r\n📽️Composition = {3}\r\n",
-                        tag.v.frametype, tag.v.codecID, tag.v.avcPacketType, tag.v.compositionTime);
-                    tagEditbox.Text = result + vd;
-                }
-                else
-                {
-                    string ad = String.Format("🔈Format = {0}\r\n🔈Rate = {1}\r\n🔈Size = {2}\r\n🔈Type = {3}\r\n🔈PacketType = {4}",
-                        tag.a.soundFormat, tag.a.soundRate, tag.a.soundSize, tag.a.soundType, tag.a.aacPacketType);
-                    tagEditbox.Text = result + ad;
-                }
-                string previousTagSize = String.Format("PreviousTagSize = {0}\r\n", tag.previousTagSize);
-                tagEditbox.Text += previousTagSize;
-
-                if (tag.data != null) {
-                    codecEditbox.Clear();
-                    string nal = BitConverter.ToString(tag.data, 0, Math.Min(tag.data.Count<byte>(), 72));
-
-                    string tagText = nal.Substring(0, 33);
-                    string videoTagText = nal.Substring(33, 14);
-                    string nalText = nal.Substring(47, nal.Length - 47);
-
-                    // 构造Rtf格式的文本
-                    string rtfText = "{\\rtf1\\ansi\\deff0 {\\colortbl;\\red255\\green0\\blue0;\\red0\\green200\\blue40;\\red0\\green0\\blue0;}"; // 开始标记，定义颜色表
-                    rtfText += $"{{\\cf1 {tagText}}}";
-                    rtfText += $"{{\\cf2 {videoTagText}}}";
-                    rtfText += $"{{\\cf0 {nalText}}}";
-                    rtfText += "}"; // 结束标记
-
-                    // 在RichTextBox控件中显示Rtf格式的文本
-                    codecEditbox.Rtf = rtfText;
-                }
+                FillTagTreeView(ref tag);
+                FillDetailTreeView(ref tag);
+                FillBinaryDataView(ref tag);
             }
+        }
+
+        private void frmTimeinfo_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
