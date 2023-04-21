@@ -9,8 +9,6 @@ using System.Windows.Forms;
 using JDP.Library;
 using System.Drawing;
 
-using WpfHexaEditor;
-using WpfHexaEditor.Core;
 using System.ComponentModel.Design;
 
 namespace JDP
@@ -197,7 +195,6 @@ namespace JDP
         }
         private void FillBinaryDataView(ref FlvTag tag)
         {
-            WpfHexaEditor.HexEditor editor = new WpfHexaEditor.HexEditor();
             if (tag.data != null)
             {
                 //codecEditbox.Clear();

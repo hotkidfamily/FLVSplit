@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using WpfHexaEditor.Core.MethodExtention;
 
 namespace JDP.Library
 {
