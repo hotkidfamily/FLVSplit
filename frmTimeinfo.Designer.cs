@@ -30,7 +30,7 @@ namespace JDP
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Tag");
+            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Tag");
             this.lvTime = new System.Windows.Forms.ListView();
             this.ch_frameIdx = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch_offset_hex = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -43,10 +43,12 @@ namespace JDP
             this.tagDetailGroupBox = new System.Windows.Forms.GroupBox();
             this.tagTreeView = new System.Windows.Forms.TreeView();
             this.dataGroupBox = new System.Windows.Forms.GroupBox();
+            this.dataViewer = new Be.Windows.Forms.HexBox();
             this.detailGroupBox = new System.Windows.Forms.GroupBox();
             this.detailTreeView = new System.Windows.Forms.TreeView();
             this.framesGroupBox = new System.Windows.Forms.GroupBox();
             this.tagDetailGroupBox.SuspendLayout();
+            this.dataGroupBox.SuspendLayout();
             this.detailGroupBox.SuspendLayout();
             this.framesGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -119,6 +121,7 @@ namespace JDP
             // 
             // tagDetailGroupBox
             // 
+            this.tagDetailGroupBox.AutoSize = true;
             this.tagDetailGroupBox.Controls.Add(this.tagTreeView);
             this.tagDetailGroupBox.Location = new System.Drawing.Point(903, 477);
             this.tagDetailGroupBox.Name = "tagDetailGroupBox";
@@ -133,15 +136,17 @@ namespace JDP
             this.tagTreeView.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tagTreeView.Location = new System.Drawing.Point(6, 26);
             this.tagTreeView.Name = "tagTreeView";
-            treeNode1.Name = "Tag";
-            treeNode1.Text = "Tag";
+            treeNode16.Name = "Tag";
+            treeNode16.Text = "Tag";
             this.tagTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode16});
             this.tagTreeView.Size = new System.Drawing.Size(403, 299);
             this.tagTreeView.TabIndex = 0;
             // 
             // dataGroupBox
             // 
+            this.dataGroupBox.AutoSize = true;
+            this.dataGroupBox.Controls.Add(this.dataViewer);
             this.dataGroupBox.Location = new System.Drawing.Point(0, 478);
             this.dataGroupBox.Name = "dataGroupBox";
             this.dataGroupBox.Size = new System.Drawing.Size(897, 336);
@@ -149,12 +154,29 @@ namespace JDP
             this.dataGroupBox.TabStop = false;
             this.dataGroupBox.Text = "Data";
             // 
+            // dataViewer
+            // 
+            this.dataViewer.ColumnInfoVisible = true;
+            this.dataViewer.Font = new System.Drawing.Font("Monaco", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dataViewer.HexCasing = Be.Windows.Forms.HexCasing.Lower;
+            this.dataViewer.LineInfoVisible = true;
+            this.dataViewer.Location = new System.Drawing.Point(6, 26);
+            this.dataViewer.Name = "dataViewer";
+            this.dataViewer.ReadOnly = true;
+            this.dataViewer.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
+            this.dataViewer.Size = new System.Drawing.Size(880, 298);
+            this.dataViewer.StringViewVisible = true;
+            this.dataViewer.TabIndex = 0;
+            this.dataViewer.UseFixedBytesPerLine = true;
+            this.dataViewer.VScrollBarVisible = true;
+            // 
             // detailGroupBox
             // 
+            this.detailGroupBox.AutoSize = true;
             this.detailGroupBox.Controls.Add(this.detailTreeView);
             this.detailGroupBox.Location = new System.Drawing.Point(903, 0);
             this.detailGroupBox.Name = "detailGroupBox";
-            this.detailGroupBox.Size = new System.Drawing.Size(415, 471);
+            this.detailGroupBox.Size = new System.Drawing.Size(416, 490);
             this.detailGroupBox.TabIndex = 4;
             this.detailGroupBox.TabStop = false;
             this.detailGroupBox.Text = "Detail";
@@ -170,6 +192,7 @@ namespace JDP
             // 
             // framesGroupBox
             // 
+            this.framesGroupBox.AutoSize = true;
             this.framesGroupBox.Controls.Add(this.lvTime);
             this.framesGroupBox.Location = new System.Drawing.Point(0, 0);
             this.framesGroupBox.Name = "framesGroupBox";
@@ -180,7 +203,7 @@ namespace JDP
             // 
             // frmTimeinfo
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1324, 821);
@@ -198,9 +221,11 @@ namespace JDP
             this.Load += new System.EventHandler(this.frmTimeinfo_Load);
             this.Shown += new System.EventHandler(this.frmTimeinfo_Shown);
             this.tagDetailGroupBox.ResumeLayout(false);
+            this.dataGroupBox.ResumeLayout(false);
             this.detailGroupBox.ResumeLayout(false);
             this.framesGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -222,5 +247,6 @@ namespace JDP
         private System.Windows.Forms.TreeView tagTreeView;
         private System.Windows.Forms.TreeView detailTreeView;
         private System.ComponentModel.Design.ByteViewer dataHexviewer;
+        private Be.Windows.Forms.HexBox dataViewer;
     }
 }
