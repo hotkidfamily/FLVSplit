@@ -54,7 +54,8 @@ namespace JDP {
 		private IVideoWriter _videoWriter;
 		private TimeCodeWriter _timeCodeWriter;
 		private List<uint> _videoTimeStamps;
-		private bool _extractAudio;
+        private List<uint> _audioTimeStamps;
+        private bool _extractAudio;
 		private bool _extractVideo;
 		private bool _extractTimeCodes;
 		private bool _extractedAudio;
@@ -123,8 +124,9 @@ namespace JDP {
 			_extractVideo = extractVideo;
 			_extractTimeCodes = extractTimeCodes;
 			_videoTimeStamps = new List<uint>();
+            _audioTimeStamps = new List<uint>();
 
-			Seek(0);
+            Seek(0);
 			if (_fileLength < 4 || ReadUInt32() != 0x464C5601) {
 				if (_fileLength >= 8 && ReadUInt32() == 0x66747970) {
 					throw new Exception("This is a MP4 file. YAMB or MP4Box can be used to extract streams.");
@@ -189,7 +191,7 @@ namespace JDP {
 		}
 
 		private bool ReadTag() {
-			uint tagType, dataSize, timeStamp, streamID, mediaInfo, avcPacketType;
+			uint tagType, dataSize, timeStamp, streamID, mediaInfo;
 			byte[] data;
 			long curTagpos = 0;
 			uint tagSize = 0;
@@ -217,29 +219,41 @@ namespace JDP {
 
 			mediaInfo = ReadUInt8();
 			UInt32 composition = GetUInt32();
-			avcPacketType = (composition >> 24) & 0xff;
-            UInt32 tempv = composition & 0x00ffffff;
-            Int32 compositionTime = (Int32)((tempv & 0x00800000) << 8 | (tempv & 0x007fffff));
-            Int32 pts = (Int32)timeStamp + compositionTime;
 			dataSize -= 1;
 			data = ReadBytes((int)dataSize);
 
-			if (tagType == 0x8) {  // Audio
+            if (_timeCodeWriter == null)
+            {
+                string path = _outputPathBase + ".txt";
+                _timeCodeWriter = new TimeCodeWriter((_extractTimeCodes && CanWriteTo(path)) ? path : null);
+                _extractedTimeCodes = _extractTimeCodes;
+            }
+
+            if (tagType == 0x8) {  // Audio
 				if (_audioWriter == null) {
 					_audioWriter = _extractAudio ? GetAudioWriter(mediaInfo) : new DummyAudioWriter();
 					_extractedAudio = !(_audioWriter is DummyAudioWriter);
 				}
 				_audioWriter.WriteChunk(data, timeStamp);
+
+                uint diff = 0;
+                if (_audioTimeStamps.Count > 0)
+                {
+                    uint lastTimeStamp = 0;
+                    lastTimeStamp = _audioTimeStamps[_audioTimeStamps.Count - 1];
+                    diff = timeStamp - lastTimeStamp;
+                }
+                _audioTimeStamps.Add(timeStamp);
+                _timeCodeWriter.Write(curTagpos, tagType, tagSize, timeStamp, diff, 0, 0);
 			}
 			else if ((tagType == 0x9) && ((mediaInfo >> 4) != 5)) { // Video
-				if (_videoWriter == null) {
+                uint tempv = composition & 0x00ffffff;
+                int compositionTime = (int)((tempv & 0x00800000) << 8 | (tempv & 0x007fffff));
+                int pts = (int)timeStamp + compositionTime;
+
+                if (_videoWriter == null) {
 					_videoWriter = _extractVideo ? GetVideoWriter(mediaInfo) : new DummyVideoWriter();
 					_extractedVideo = !(_videoWriter is DummyVideoWriter);
-				}
-				if (_timeCodeWriter == null) {
-					string path = _outputPathBase + ".txt";
-					_timeCodeWriter = new TimeCodeWriter((_extractTimeCodes && CanWriteTo(path)) ? path : null);
-					_extractedTimeCodes = _extractTimeCodes;
 				}
                 uint diff = 0;
                 if (_videoTimeStamps.Count > 0)

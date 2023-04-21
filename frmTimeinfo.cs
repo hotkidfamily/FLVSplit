@@ -147,7 +147,7 @@ namespace JDP
             root.Nodes.Add("Timestamp: " + tag.timestamp);
             root.Nodes.Add("Stream ID: " + tag.streamID);
 
-            if (tag.v.frametype != "")
+            if (tag.v.frametype != null)
             {
                 TreeNode vNode = new TreeNode("Video");
                 vNode.NodeFont = new Font("Segoe UI", 10.5f, FontStyle.Bold);
@@ -158,7 +158,7 @@ namespace JDP
                 root.Nodes.Add(vNode);
             }
 
-            if (tag.a.soundFormat != 0)
+            if (tag.a.soundFormat != null)
             {
                 TreeNode aNode = new TreeNode("Audio");
                 aNode.NodeFont = new Font("Segoe UI", 10.5f, FontStyle.Bold);
@@ -201,7 +201,7 @@ namespace JDP
             if (tag.data != null)
             {
                 //codecEditbox.Clear();
-                string nal = BitConverter.ToString(tag.data, 0, Math.Min(tag.data.Count<byte>(), 72));
+/*                string nal = BitConverter.ToString(tag.data, 0, Math.Min(tag.data.Count<byte>(), 72));
 
                 string tagText = nal.Substring(0, 33);
                 string videoTagText = nal.Substring(33, 14);
@@ -212,7 +212,7 @@ namespace JDP
                 rtfText += $"{{\\cf1 {tagText}}}";
                 rtfText += $"{{\\cf2 {videoTagText}}}";
                 rtfText += $"{{\\cf0 {nalText}}}";
-                rtfText += "}"; // 结束标记
+                rtfText += "}"; // 结束标记*/
 
                 // 在RichTextBox控件中显示Rtf格式的文本
                 //codecEditbox.Rtf = rtfText;
@@ -227,7 +227,8 @@ namespace JDP
             if (e.IsSelected)
             {
                 FlvSpecs flvSpecs = new FlvSpecs(_binPath);
-                long offset = long.Parse(_records[e.ItemIndex].offset);
+                var v = _records[e.ItemIndex];
+                long offset = long.Parse(v.offset);
                 FlvTag tag = new FlvTag();
                 flvSpecs.parseTag(offset, ref tag);
                 FillTagTreeView(ref tag);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using WpfHexaEditor.Core.MethodExtention;
 
 namespace JDP.Library
@@ -21,11 +22,11 @@ namespace JDP.Library
     };
     struct audio
     {
-        public byte soundFormat;
-        public byte soundRate;
-        public byte soundSize;
-        public byte soundType;
-        public byte aacPacketType;
+        public string soundFormat;
+        public string soundRate;
+        public string soundSize;
+        public string soundType;
+        public string aacPacketType;
     };
     struct FlvTag
     {
@@ -42,7 +43,7 @@ namespace JDP.Library
     {
         private FileStream _fs;
         long _fileOffset = 0;
-        long _fileLength = 0; 
+        long _fileLength = 0;
         private static readonly byte[] _startCode = new byte[] { 0, 0, 0, 1 };
 
         private int _nalLengthSize = 4;
@@ -120,7 +121,7 @@ namespace JDP.Library
             numOfArrays = 22,
         };
 
-        public FlvSpecs(string path) 
+        public FlvSpecs(string path)
         {
             _fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 65536);
             _fileLength = _fs.Length;
@@ -129,9 +130,9 @@ namespace JDP.Library
         public bool parseTag(long offset, ref FlvTag detail)
         {
             _fs.Seek(offset, SeekOrigin.Begin);
-            
-            uint tagType, dataSize, timeStamp, streamID, mediaInfo, avcPacketType;
-            byte[] data;
+
+            uint tagType, dataSize, timeStamp, streamID;
+            byte[] data = null;
 
             if ((_fileLength - _fileOffset) < 11)
             {
@@ -155,41 +156,71 @@ namespace JDP.Library
                 return false;
             }
 
-            mediaInfo = ReadUInt8();
-            UInt32 composition = GetUInt32();
-            avcPacketType = (composition >> 24) & 0xff;
-            UInt32 tempv = composition & 0x00ffffff;
-            Int32 compositionTime = (Int32)((tempv & 0x00800000) << 8 | (tempv & 0x007fffff));
-            Int32 pts = (Int32)timeStamp + compositionTime;
-            Seek(offset);
-            data = ReadBytes((int)dataSize + 11);
+            if (tagType == 9)
+            {
+                uint mediaInfo, avcPacketType;
+                mediaInfo = ReadUInt8();
+                uint composition = GetUInt32();
+                avcPacketType = (composition >> 24) & 0xff;
+                uint tempv = composition & 0x00ffffff;
+                int compositionTime = (Int32)((tempv & 0x00800000) << 8 | (tempv & 0x007fffff));
+
+                uint frametype = (mediaInfo >> 4) & 0x0f;
+                uint codecID = mediaInfo & 0x0f;
+                detail.v.frametype = videoTagFrameType(frametype) + "[" + frametype + "]";
+                detail.v.codecID = videoCodecID(codecID) + "[" + codecID + "]";
+                detail.v.avcPacketType = videoAVCPacketType(avcPacketType) + "[" + avcPacketType + "]";
+                detail.v.compositionTime = compositionTime;
+                Seek(offset);
+                data = ReadBytes((int)dataSize + 11);
+                parserVideoPacket(ref data, ref detail);
+            }
+            else if (tagType == 8)
+            {
+                uint mediaInfo, format, rate, size, type, pkttype = uint.MaxValue;
+                mediaInfo = ReadUInt8();
+
+                format = (mediaInfo >> 4) & 0x0f;
+                rate = (mediaInfo >> 2) & 0x03;
+                size = (mediaInfo >> 1) & 0x01;
+                type = mediaInfo & 0x01;
+                if(format == 10)
+                {
+                    pkttype = ReadUInt8();
+                }
+
+                detail.a.soundFormat = valueToSoundFormat(format) + "[" + format + "]";
+                detail.a.soundRate = valueToSoundSampleRate(rate) + "[" + rate + "]";
+                detail.a.soundSize = size == 0? "8bits " : "16bits " + "[" + size + "]";
+                detail.a.soundType = type == 0 ? "Mono " : "Stereo " + "[" + type + "]";
+                detail.a.aacPacketType = pkttype == 0 ? "aac sequence header " : pkttype == 1 ? "aac raw " : " ";
+                detail.a.aacPacketType += "[" + pkttype + "]";
+
+                Seek(offset);
+                data = ReadBytes((int)dataSize + 11);
+                parserAudioPacket(ref data, ref detail);
+            }
+
+
             uint previousTagSize = ReadUInt32();
-
-            parserNalu(ref data, ref detail);
-
             detail.tagType = tagType;
             detail.dataSize = dataSize;
             detail.timestamp = timeStamp;
             detail.streamID = streamID;
             detail.data = data;
             detail.previousTagSize = previousTagSize;
-            if(tagType == 9)
-            {
-                detail.v.frametype = videoTagFrameType((mediaInfo>>4)&0x0f);
-                detail.v.codecID = videoCodecID(mediaInfo & 0x0f);
-                detail.v.avcPacketType = videoAVCPacketType(avcPacketType);
-                detail.v.compositionTime = compositionTime;
-            }
-            else if(tagType == 8)
-            {
 
-            }
             return true;
         }
 
-        private bool parserNalu(ref byte[] data, ref FlvTag detail)
+        private bool parserAudioPacket(ref byte[] data, ref FlvTag detail)
         {
-            if(data == null)
+            return false;
+        }
+
+        private bool parserVideoPacket(ref byte[] data, ref FlvTag detail)
+        {
+            if (data == null)
                 return false;
 
             int nalus = 0;
@@ -252,24 +283,81 @@ namespace JDP.Library
 
             return true;
         }
+        struct formatdesc
+        {
+            public int v;
+            public string desc;
+        };
 
-        private string videoTagFrameType(uint v)
+        private string valueToSoundSampleRate(uint v)
+        {
+            formatdesc[] descs =
+            {
+                new formatdesc() { v = 0, desc = "5.5 KHz " },
+                new formatdesc() { v = 1, desc = "11 KHz " },
+                new formatdesc() { v = 2, desc = "22 KHz " },
+                new formatdesc() { v = 3, desc = "44 KHz " }
+            };
+
+            foreach (formatdesc desc in descs)
+            {
+                if (v == desc.v)
+                {
+                    return desc.desc;
+                }
+            }
+
+            return "";
+        }
+
+        private string valueToSoundFormat(uint v)
+        {
+            formatdesc[] descs =
+            {
+                new formatdesc() { v = 0, desc = "Linear PCM, platform endian " },
+                new formatdesc() { v = 1, desc = "ADPCM " },
+                new formatdesc() { v = 2, desc = "MP3 " },
+                new formatdesc() { v = 3, desc = "Linear PCM, little endian " },
+                new formatdesc() { v = 4, desc = "Nellymoser 16 kHz mono " },
+                new formatdesc() { v = 5, desc = "Nellymoser 8 kHz mono " },
+                new formatdesc() { v = 6, desc = "Nellymoser " },
+                new formatdesc() { v = 7, desc = "G.711 A-law logarithmic PCM " },
+                new formatdesc() { v = 8, desc = "G.711 mu-law logarithmic PCM " },
+                new formatdesc() { v = 9, desc = "reserved " },
+                new formatdesc() { v = 10, desc = "AAC " },
+                new formatdesc() { v = 11, desc = "Speex " },
+                new formatdesc() { v = 14, desc = "MP3 8 kHz " },
+                new formatdesc() { v = 15, desc = "Device-specific sound " }
+            };
+
+            foreach (formatdesc desc in descs)
+            {
+                if (v == desc.v)
+                {
+                    return desc.desc;
+                }
+            }
+
+            return "";
+        }
+
+private string videoTagFrameType(uint v)
         {
             string[] types = new string[]
             {
-                "key frame (seekable)",
-                "inter frame (non-seekable)",
-                "disposable inter frame (H.263 only)",
-                "generated key frame (reserved for server use only)",
-                "video info/command frame"
+                "key frame (seekable) ",
+                "inter frame (non-seekable) ",
+                "disposable inter frame (H.263 only) ",
+                "generated key frame (reserved for server use only) ",
+                "video info/command frame "
             };
             if(v < 5 && v > 0)
             {
-                return types[v-1] + "[" + v + "]";
+                return types[v-1];
             }
             else
             {
-                return "(unknown)" + "[" + v + "]";
+                return "(unknown) ";
             }
         }
 
@@ -277,25 +365,25 @@ namespace JDP.Library
         {
             string[] types = new string[]
             {
-                "Sorenson H.263",
-                "Screen video",
-                "On2 VP6",
-                "On2 VP6 with alpha channel",
-                "Screen video version 2",
-                "AVC",
-                "HEVC"
+                "Sorenson H.263 ",
+                "Screen video ",
+                "On2 VP6 ",
+                "On2 VP6 with alpha channel ",
+                "Screen video version 2 ",
+                "AVC ",
+                "HEVC "
             };
             if (v < 9 && v > 1)
             {
-                return types[v-2] + "[" + v + "]";
+                return types[v-2];
             }
             else if(v == 12)
             {
-                return "HEVC" + "[" + v + "]";
+                return "HEVC ";
             }
             else
             {
-                return "(unknown)" + "[" + v + "]";
+                return "(unknown) ";
             }
         }
 
@@ -303,17 +391,17 @@ namespace JDP.Library
         {
             string[] types = new string[]
             {
-                "sequence header",
-                "NALU",
-                "end of sequence"
+                "sequence header ",
+                "NALU ",
+                "end of sequence "
             };
             if (v < 2)
             {
-                return types[v] + "[" + v + "]";
+                return types[v];
             }
             else
             {
-                return "(unknown)" + "[" + v + "]";
+                return "(unknown) ";
             }
         }
 
