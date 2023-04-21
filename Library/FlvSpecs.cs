@@ -1,10 +1,49 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
 namespace JDP.Library
 {
+    public static class ByteArrayExtention
+    {
+        public static IEnumerable<long> FindIndexOf(this byte[] self, byte[] candidate)
+        {
+            if (IsEmptyLocate(self, candidate))
+            {
+                yield break;
+            }
+
+            for (int i = 0; i < self.Length; i++)
+            {
+                if (IsMatch(self, i, candidate))
+                {
+                    yield return i;
+                }
+            }
+        }
+
+        private static bool IsMatch(byte[] array, long position, byte[] candidate)
+        {
+            if (candidate.Length <= array.Length - position)
+            {
+                return !candidate.Where((byte t, int i) => array[position + i] != t).Any();
+            }
+
+            return false;
+        }
+
+        private static bool IsEmptyLocate(byte[] array, byte[] candidate)
+        {
+            if (array != null && candidate != null && array.Length != 0 && candidate.Length != 0)
+            {
+                return candidate.Length > array.Length;
+            }
+
+            return true;
+        }
+    }
     struct nalu
     {
         public int type;
