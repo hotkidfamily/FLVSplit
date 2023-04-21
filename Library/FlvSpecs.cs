@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using WpfHexaEditor.Core.MethodExtention;
 
 namespace JDP.Library
 {
@@ -199,23 +201,15 @@ namespace JDP.Library
 
             if (v1 == v2) // annexb format
             {
-                if (data[dataOffset] == 0)
-                { // Headers vps sps pps 
-                    if (data.Length < 10 + dataOffset) return false;
-                    int offset = 4 + dataOffset;
-                    int len = data.Length - offset;
-                }
-                else
-                { // Video data
-                    int offset = 4 + dataOffset;
-                    int len = data.Length - offset;
-                }
+                byte[] ss = new byte[3] { 0, 0, 1 };
+                var indexs = data.FindIndexOf(ss);
+                nalus = indexs.Count<long>();
             }
             else if (data[dataOffset - 4] == 0)
             { // Headers HVCCDecoderConfigurationRecord
                 if (data.Length < 10) return false;
 
-                int offset, vpsCount = 0, spsCount = 0, ppsCount = 0, nalArrays;
+                int offset, nalArrays;
 
                 offset = (int)HVCCPayloadOffset.lengthSizeMinusOne + dataOffset;
                 _nalLengthSize = (data[offset++] & 0x03) + 1;
@@ -228,13 +222,6 @@ namespace JDP.Library
                     int nalType = data[offset++] & 0x3f;
                     int numNalus = (int)BitConverterBE.ToUInt16(data, offset);
                     offset += 2;
-
-                    if (nalType == (int)HEVCNalType.VPS)
-                        vpsCount++;
-                    if (nalType == (int)HEVCNalType.SPS)
-                        spsCount++;
-                    if (nalType == (int)HEVCNalType.PPS)
-                        ppsCount++;
 
                     for (int j = 0; j < numNalus; j++)
                     {
