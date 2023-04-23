@@ -292,7 +292,6 @@ namespace JDP
         private System.Windows.Forms.GroupBox framesGroupBox;
         private System.Windows.Forms.TreeView tagTreeView;
         private System.Windows.Forms.TreeView detailTreeView;
-        private System.ComponentModel.Design.ByteViewer dataHexviewer;
         private Be.Windows.Forms.HexBox dataViewer;
         private System.Windows.Forms.RadioButton onlyVideoRatioButton;
         private System.Windows.Forms.RadioButton onlyAudioRatioButton;

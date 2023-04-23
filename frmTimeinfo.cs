@@ -169,11 +169,20 @@ namespace JDP
             detailTreeView.Nodes.Clear();
 
             TreeNode root = new TreeNode();
-            if (tag.v.frametype != "")
+            if (tag.v.frametype != null)
             {
                 root = new TreeNode("VideoData");
                 root.NodeFont = new Font("Segoe UI", 10.5f, FontStyle.Bold);
-                root.Nodes.Add("Nalus: " + tag.v.NALUs);
+                root.Nodes.Add("Nalus Size: " + tag.v.NALUs);
+                for (int i = 0; i<tag.v.NALUs; i++)
+                {
+                    var v = tag.v.NaluDetails[i];
+                    TreeNode leaf = new TreeNode("Nalu");
+                    leaf.NodeFont = new Font("Segoe UI", 10.5f, FontStyle.Bold);
+                    leaf.Nodes.Add("type: " + v.type);
+                    leaf.Nodes.Add("offset: " + v.offset);
+                    root.Nodes.Add(leaf);
+                }
             }
             detailTreeView.Nodes.Add(root);
             detailTreeView.ExpandAll();

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace JDP.Library
 {
@@ -44,10 +43,10 @@ namespace JDP.Library
             return true;
         }
     }
-    struct nalu
+    struct NaluDetail
     {
-        public int type;
-        public byte[] data;
+        public string type;
+        public long offset;
     }
     struct video
     {
@@ -56,7 +55,8 @@ namespace JDP.Library
         public string avcPacketType;
         public int compositionTime;
 
-        public int NALUs;
+        public long NALUs;
+        public NaluDetail[] NaluDetails;
     };
     struct audio
     {
@@ -85,6 +85,47 @@ namespace JDP.Library
         private static readonly byte[] _startCode = new byte[] { 0, 0, 0, 1 };
 
         private int _nalLengthSize = 4;
+        enum H264NalType : int
+        {
+            NAL_UNSPECIFIED = 0,
+            NAL_SLICE = 1,
+            NAL_DPA = 2,
+            NAL_DPB = 3,
+            NAL_DPC = 4,
+            NAL_IDR_SLICE = 5,
+            NAL_SEI = 6,
+            NAL_SPS = 7,
+            NAL_PPS = 8,
+            NAL_AUD = 9,
+            NAL_END_SEQUENCE = 10,
+            NAL_END_STREAM = 11,
+            NAL_FILLER_DATA = 12,
+            NAL_SPS_EXT = 13,
+            NAL_PREFIX = 14,
+            NAL_SUB_SPS = 15,
+            NAL_DPS = 16,
+            NAL_RESERVED17 = 17,
+            NAL_RESERVED18 = 18,
+            NAL_AUXILIARY_SLICE = 19,
+            NAL_EXTEN_SLICE = 20,
+            NAL_DEPTH_EXTEN_SLICE = 21,
+            NAL_RESERVED22 = 22,
+            NAL_RESERVED23 = 23,
+            NAL_UNSPECIFIED24 = 24,
+            NAL_UNSPECIFIED25 = 25,
+            NAL_UNSPECIFIED26 = 26,
+            NAL_UNSPECIFIED27 = 27,
+            NAL_UNSPECIFIED28 = 28,
+            NAL_UNSPECIFIED29 = 29,
+            NAL_UNSPECIFIED30 = 30,
+            NAL_UNSPECIFIED31 = 31,
+        };
+
+        enum AVCPayloadOffset : int
+        {
+            lengthSizeMinusOne = 4,
+            SPSSize= 5,
+        };
 
         enum HEVCNalType : int
         {
@@ -211,7 +252,14 @@ namespace JDP.Library
                 detail.v.compositionTime = compositionTime;
                 Seek(offset);
                 data = ReadBytes((int)dataSize + 11);
-                parserVideoPacket(ref data, ref detail);
+                if(codecID == 7)
+                {
+                    parserH264VideoPacket(ref data, ref detail);
+                }
+                else
+                {
+                    parserHEVCVideoPacket(ref data, ref detail);
+                }
             }
             else if (tagType == 8)
             {
@@ -255,8 +303,74 @@ namespace JDP.Library
         {
             return false;
         }
+        private bool parserH264VideoPacket(ref byte[] data, ref FlvTag detail)
+        {
+            if (data == null)
+                return false;
 
-        private bool parserVideoPacket(ref byte[] data, ref FlvTag detail)
+            int nalus = 0;
+            int dataOffset = 16; // 11 bytes tag size + 5 bytes video tag 
+
+            if (data[dataOffset - 4] == 0)
+            { // Headers AVCDecoderConfigurationRecord
+                if (data.Length < 10 + dataOffset) return false;
+
+                int offset, spsCount, ppsCount;
+
+                offset = dataOffset + (int)AVCPayloadOffset.lengthSizeMinusOne;
+                _nalLengthSize = (data[offset++] & 0x03) + 1;
+                spsCount = data[offset++] & 0x1F;
+                detail.v.NaluDetails = new NaluDetail[256];
+
+                ppsCount = -1;
+                while (offset <= data.Length - 2)
+                {
+                    if ((spsCount == 0) && (ppsCount == -1))
+                    {
+                        ppsCount = data[offset++];
+                        continue;
+                    }
+
+                    if (spsCount > 0) spsCount--;
+                    else if (ppsCount > 0) ppsCount--;
+                    else break;
+
+                    int len = (int)BitConverterBE.ToUInt16(data, offset);
+                    offset += 2;
+                    if (offset + len > data.Length) break;
+                    string naltype = naltype = ((H264NalType)(data[offset] & 0x1f)).ToString();
+                    detail.v.NaluDetails[nalus++] = new NaluDetail() { type = naltype, offset = offset };
+                    offset += len;
+                }
+                detail.v.NALUs = nalus;
+            }
+            else
+            { // Video data
+                int offset = dataOffset;
+
+                detail.v.NaluDetails = new NaluDetail[256];
+                while (offset <= data.Length - _nalLengthSize)
+                {
+                    int len = (_nalLengthSize == 2) ?
+                        (int)BitConverterBE.ToUInt16(data, offset) :
+                        (int)BitConverterBE.ToUInt32(data, offset);
+                    offset += _nalLengthSize;
+
+                    string naltype = ((H264NalType)(data[offset] & 0x1f)).ToString();
+
+                    detail.v.NaluDetails[nalus++] = new NaluDetail() { type = naltype, offset = offset };
+
+                    if (offset + len > data.Length) break;
+                    offset += len;
+                }
+                detail.v.NALUs = nalus;
+            }
+
+            return true;
+        }
+
+
+        private bool parserHEVCVideoPacket(ref byte[] data, ref FlvTag detail)
         {
             if (data == null)
                 return false;
@@ -272,7 +386,14 @@ namespace JDP.Library
             {
                 byte[] ss = new byte[3] { 0, 0, 1 };
                 var indexs = data.FindIndexOf(ss);
-                nalus = indexs.Count<long>();
+                nalus = indexs.Count(); ;
+                detail.v.NaluDetails = new NaluDetail[nalus];
+                int j = 0;
+                foreach (long i in indexs) 
+                {
+                    string naltype = ((HEVCNalType)((data[i + 3] >> 1) & 0x3f)).ToString();
+                    detail.v.NaluDetails[j++] = new NaluDetail() { type = naltype, offset = i }; 
+                }
             }
             else if (data[dataOffset - 4] == 0)
             { // Headers HVCCDecoderConfigurationRecord
@@ -286,6 +407,8 @@ namespace JDP.Library
                 offset = (int)HVCCPayloadOffset.numOfArrays + dataOffset;
                 nalArrays = data[offset++];
 
+                detail.v.NaluDetails = new NaluDetail[nalArrays];
+
                 for (int i = 0; i < nalArrays; i++)
                 {
                     int nalType = data[offset++] & 0x3f;
@@ -296,21 +419,38 @@ namespace JDP.Library
                     {
                         int len = (int)BitConverterBE.ToUInt16(data, offset);
                         offset += 2;
+
+                        string naltype = ((HEVCNalType)((data[offset] >> 1) & 0x3f)).ToString();
+                        detail.v.NaluDetails[i] = new NaluDetail() { type = naltype, offset = offset };
+
                         offset += len;
                         nalus++;
+
+                        if (offset >= data.Length)
+                            break;
                     }
+                    if (offset >= data.Length)
+                        break;
                 }
             }
             else
             { // Video data
                 int offset = dataOffset;
 
+                int i = 0;
+
+                detail.v.NaluDetails = new NaluDetail[256];
                 while (offset <= data.Length - _nalLengthSize)
                 {
                     int len = (_nalLengthSize == 2) ?
                         (int)BitConverterBE.ToUInt16(data, offset) :
                         (int)BitConverterBE.ToUInt32(data, offset);
                     offset += _nalLengthSize;
+
+                    string naltype = ((HEVCNalType)((data[offset] >> 1) & 0x3f)).ToString();
+
+                    detail.v.NaluDetails[i++] = new NaluDetail() { type = naltype, offset = offset };
+
                     if (offset + len > data.Length) break;
                     offset += len;
                     nalus++;
