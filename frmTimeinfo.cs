@@ -124,6 +124,8 @@ namespace JDP
         }
         private void FillTagTreeView(ref FlvTag tag)
         {
+            tagTreeView.BeginUpdate();
+
             tagTreeView.Nodes.Clear();
 
             TreeNode root = new TreeNode("FLVTag");
@@ -159,9 +161,11 @@ namespace JDP
             root.Nodes.Add("Preview Tag Size: " + tag.previousTagSize);
             tagTreeView.Nodes.Add(root);
             tagTreeView.ExpandAll();
+            tagTreeView.EndUpdate();
         }
         private void FillDetailTreeView(ref FlvTag tag)
         {
+            detailTreeView.BeginUpdate();
             detailTreeView.Nodes.Clear();
 
             TreeNode root = new TreeNode();
@@ -173,6 +177,7 @@ namespace JDP
             }
             detailTreeView.Nodes.Add(root);
             detailTreeView.ExpandAll();
+            detailTreeView.EndUpdate();
         }
         private void FillBinaryDataView(ref FlvTag tag)
         {
