@@ -222,9 +222,11 @@ namespace JDP
             if (e.IsSelected)
             {
                 FlvSpecs flvSpecs = new FlvSpecs(_binPath);
-                if(e.Item.Tag != null)
+                var idx = e.ItemIndex;
+                
+                if(_items[idx].Tag != null)
                 {
-                    var c = e.Item.Tag as TimeInfo;
+                    var c = _items[idx].Tag as TimeInfo;
                     long offset = long.Parse(c.offset);
                     if(offset != -1)
                     {
@@ -235,10 +237,6 @@ namespace JDP
                         FillBinaryDataView(ref tag);
                     }
                 }
-/*                var t = e.Item.SubItems[0].Text;
-                int idx = int.Parse(t);
-                var v = _records[idx];
-                long offset = long.Parse(v.offset);*/
             }
         }
 
