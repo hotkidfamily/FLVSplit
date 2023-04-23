@@ -43,7 +43,7 @@ namespace JDP.Library
             return true;
         }
     }
-    struct NaluDetail
+    class NaluDetail
     {
         public string type;
         public long offset;
@@ -391,8 +391,9 @@ namespace JDP.Library
                 int j = 0;
                 foreach (long i in indexs) 
                 {
-                    string naltype = ((HEVCNalType)((data[i + 3] >> 1) & 0x3f)).ToString();
-                    detail.v.NaluDetails[j++] = new NaluDetail() { type = naltype, offset = i }; 
+                    long offset = i + 3;
+                    string naltype = ((HEVCNalType)((data[offset] >> 1) & 0x3f)).ToString();
+                    detail.v.NaluDetails[j++] = new NaluDetail() { type = naltype, offset = offset }; 
                 }
             }
             else if (data[dataOffset - 4] == 0)

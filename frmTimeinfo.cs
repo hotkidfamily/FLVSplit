@@ -11,6 +11,7 @@ using System.Drawing;
 
 using System.ComponentModel.Design;
 using Be.Windows.Forms;
+using System.Xaml;
 
 namespace JDP
 {
@@ -181,6 +182,7 @@ namespace JDP
                     leaf.NodeFont = new Font("Segoe UI", 10.5f, FontStyle.Bold);
                     leaf.Nodes.Add("type: " + v.type);
                     leaf.Nodes.Add("offset: " + v.offset);
+                    leaf.Tag = new NaluDetail() { type = v.type, offset = v.offset };
                     root.Nodes.Add(leaf);
                 }
             }
@@ -217,13 +219,6 @@ namespace JDP
         private void frmTimeinfo_Load(object sender, EventArgs e)
         {
 
-        }
-
-        private void tagTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            if(e.Button == MouseButtons.Left)
-            {
-            }
         }
 
         private void onlyVideoRatioButton_CheckedChanged(object sender, EventArgs e)
@@ -274,6 +269,23 @@ namespace JDP
                 }
                 lvTime.VirtualListSize = _items.Count;
                 lvTime.Refresh();
+            }
+        }
+
+        private void detailTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            TreeNode currentNode = e.Node;
+            if(currentNode != null && currentNode.Parent != null)
+            {
+                var n = currentNode.Parent;
+                if (n.Tag != null)
+                {
+                    NaluDetail v = n.Tag as NaluDetail;
+                    if (v != null)
+                    {
+                        dataViewer.Select(v.offset, 1);
+                    }
+                }
             }
         }
     }

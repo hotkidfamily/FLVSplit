@@ -30,7 +30,7 @@ namespace JDP
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Tag");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Tag");
             this.lvTime = new System.Windows.Forms.ListView();
             this.ch_frameIdx = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch_offset_hex = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -47,10 +47,10 @@ namespace JDP
             this.detailGroupBox = new System.Windows.Forms.GroupBox();
             this.detailTreeView = new System.Windows.Forms.TreeView();
             this.framesGroupBox = new System.Windows.Forms.GroupBox();
+            this.fileFramesRadioButton = new System.Windows.Forms.RadioButton();
             this.onlyAudioRatioButton = new System.Windows.Forms.RadioButton();
             this.onlyVideoRatioButton = new System.Windows.Forms.RadioButton();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.fileFramesRadioButton = new System.Windows.Forms.RadioButton();
             this.tagDetailGroupBox.SuspendLayout();
             this.dataGroupBox.SuspendLayout();
             this.detailGroupBox.SuspendLayout();
@@ -140,13 +140,12 @@ namespace JDP
             this.tagTreeView.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tagTreeView.Location = new System.Drawing.Point(6, 26);
             this.tagTreeView.Name = "tagTreeView";
-            treeNode3.Name = "Tag";
-            treeNode3.Text = "Tag";
+            treeNode1.Name = "Tag";
+            treeNode1.Text = "Tag";
             this.tagTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3});
+            treeNode1});
             this.tagTreeView.Size = new System.Drawing.Size(403, 312);
             this.tagTreeView.TabIndex = 0;
-            this.tagTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tagTreeView_NodeMouseClick);
             // 
             // dataGroupBox
             // 
@@ -194,6 +193,7 @@ namespace JDP
             this.detailTreeView.Name = "detailTreeView";
             this.detailTreeView.Size = new System.Drawing.Size(403, 469);
             this.detailTreeView.TabIndex = 0;
+            this.detailTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.detailTreeView_NodeMouseClick);
             // 
             // framesGroupBox
             // 
@@ -208,6 +208,19 @@ namespace JDP
             this.framesGroupBox.TabIndex = 5;
             this.framesGroupBox.TabStop = false;
             this.framesGroupBox.Text = "Frames";
+            // 
+            // fileFramesRadioButton
+            // 
+            this.fileFramesRadioButton.AutoSize = true;
+            this.fileFramesRadioButton.Checked = true;
+            this.fileFramesRadioButton.Location = new System.Drawing.Point(6, 25);
+            this.fileFramesRadioButton.Name = "fileFramesRadioButton";
+            this.fileFramesRadioButton.Size = new System.Drawing.Size(46, 23);
+            this.fileFramesRadioButton.TabIndex = 3;
+            this.fileFramesRadioButton.TabStop = true;
+            this.fileFramesRadioButton.Text = "🎞️";
+            this.fileFramesRadioButton.UseVisualStyleBackColor = true;
+            this.fileFramesRadioButton.CheckedChanged += new System.EventHandler(this.fileFramesRadioButton_CheckedChanged);
             // 
             // onlyAudioRatioButton
             // 
@@ -232,19 +245,6 @@ namespace JDP
             this.onlyVideoRatioButton.Text = "📽️";
             this.onlyVideoRatioButton.UseVisualStyleBackColor = true;
             this.onlyVideoRatioButton.CheckedChanged += new System.EventHandler(this.onlyVideoRatioButton_CheckedChanged);
-            // 
-            // fileFramesRadioButton
-            // 
-            this.fileFramesRadioButton.AutoSize = true;
-            this.fileFramesRadioButton.Checked = true;
-            this.fileFramesRadioButton.Location = new System.Drawing.Point(6, 25);
-            this.fileFramesRadioButton.Name = "fileFramesRadioButton";
-            this.fileFramesRadioButton.Size = new System.Drawing.Size(46, 23);
-            this.fileFramesRadioButton.TabIndex = 3;
-            this.fileFramesRadioButton.TabStop = true;
-            this.fileFramesRadioButton.Text = "🎞️";
-            this.fileFramesRadioButton.UseVisualStyleBackColor = true;
-            this.fileFramesRadioButton.CheckedChanged += new System.EventHandler(this.fileFramesRadioButton_CheckedChanged);
             // 
             // frmTimeinfo
             // 
