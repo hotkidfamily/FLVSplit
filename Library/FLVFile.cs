@@ -151,8 +151,9 @@ namespace JDP {
 			Seek(dataOffset);
 
 			prevTagSize = ReadUInt32();
+			long idx = 0;
 			while (_fileOffset < _fileLength) {
-				if (!ReadTag()) break;
+				if (!ReadTag(idx++)) break;
 				if ((_fileLength - _fileOffset) < 4) break;
 				prevTagSize = ReadUInt32();
 			}
@@ -190,7 +191,7 @@ namespace JDP {
 			}
 		}
 
-		private bool ReadTag() {
+		private bool ReadTag(long frameIdx) {
 			uint tagType, dataSize, timeStamp, streamID, mediaInfo;
 			byte[] data;
 			long curTagpos = 0;
@@ -244,7 +245,7 @@ namespace JDP {
                     diff = timeStamp - lastTimeStamp;
                 }
                 _audioTimeStamps.Add(timeStamp);
-                _timeCodeWriter.Write(curTagpos, tagType, tagSize, timeStamp, diff, 0, 0);
+                _timeCodeWriter.Write(frameIdx, curTagpos, tagType, tagSize, timeStamp, diff, 0, 0);
 			}
 			else if ((tagType == 0x9) && ((mediaInfo >> 4) != 5)) { // Video
                 uint tempv = composition & 0x00ffffff;
@@ -264,7 +265,7 @@ namespace JDP {
                 }
 				_videoTimeStamps.Add(timeStamp);
                 _videoWriter.WriteChunk(data, timeStamp, (int)((mediaInfo & 0xF0) >> 4));
-                _timeCodeWriter.Write(curTagpos, tagType, tagSize, timeStamp, diff, pts, compositionTime);
+                _timeCodeWriter.Write(frameIdx, curTagpos, tagType, tagSize, timeStamp, diff, pts, compositionTime);
 			}
 
 			return true;
@@ -1668,13 +1669,13 @@ namespace JDP {
 			if (path != null) {
 				_sw = new StreamWriter(path, false, Encoding.ASCII);
 				_sw.WriteLine("# timecode format v2,,,");
-                _sw.WriteLine("offset,tagType,tagSize,dts,dts-step,pts,pts-dts");
+                _sw.WriteLine("frames,offset,tagType,tagSize,dts,dts-step,pts,pts-dts");
 			}
 		}
 
-		public void Write(long pos, uint type, uint tagSize, uint timeStamp, uint diff = 0, Int32 composite = 0, Int32 delta = 0) {
+		public void Write(long indx, long pos, uint type, uint tagSize, uint timeStamp, uint diff = 0, Int32 composite = 0, Int32 delta = 0) {
 			if (_sw != null) {
-                _sw.WriteLine("{0:D},{1:D},{2:D},{3:D},{4:D},{5:D},{6:D}", pos, type, tagSize, timeStamp, diff, composite, delta);
+                _sw.WriteLine("{7:D},{0:D},{1:D},{2:D},{3:D},{4:D},{5:D},{6:D}", pos, type, tagSize, timeStamp, diff, composite, delta, indx);
 			}
 		}
 

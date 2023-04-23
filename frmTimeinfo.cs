@@ -23,6 +23,7 @@ namespace JDP
         private List<ListViewItem> _items = null;
         public class TimeInfo
         {
+            public string indx { get; set; }
             public string offset { get; set; }
             public string tagType { get; set; }
             public string tagSize { get; set; }
@@ -36,6 +37,7 @@ namespace JDP
         {
             public TimeinfoMap()
             {
+                Map(m => m.indx).Name("frames");
                 Map(m => m.offset).Name("offset");
                 Map(m => m.tagType).Name("tagType");
                 Map(m => m.tagSize).Name("tagSize");
@@ -59,18 +61,34 @@ namespace JDP
                 Comment = '#',
             };
 
-            using (var reader = new StreamReader(csvPath))
-            using (var csv = new CsvReader(reader, config))
+            try
             {
-                csv.Context.RegisterClassMap<TimeinfoMap>();
-                _records = csv.GetRecords<TimeInfo>().ToList();
+                using (var reader = new StreamReader(csvPath))
+                using (var csv = new CsvReader(reader, config))
+                {
+                    csv.Context.RegisterClassMap<TimeinfoMap>();
+                    _records = csv.GetRecords<TimeInfo>().ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                _records = null;
+            }
+
+            if (_records == null || _records.Count == 0) 
+            {
+                _records = new List<TimeInfo>();
+                _records.Add(new TimeInfo() { indx = "-1", offset = "-1", tagType = "x", tagSize = "-1", dts = "-1", dtsStep = "-1", pts = "-1", composTime = "-1" });
             }
 
             _items = new List<ListViewItem>();
             for (int i = 0; i < _records.Count(); i++)
             {
-                _items.Add(new ListViewItem(new string[] { i.ToString(), _records[i].offset, _records[i].tagType == "9" ? "📽":"🔊", _records[i].tagSize, _records[i].dts,
-                        _records[i].dtsStep, _records[i].pts, _records[i].composTime}));
+                var v = new ListViewItem(new string[] { _records[i].indx, _records[i].offset, _records[i].tagType == "9" ? "📽":"🔊", _records[i].tagSize, _records[i].dts,
+                    _records[i].dtsStep, _records[i].pts, _records[i].composTime}) ;
+                v.Tag = _records[i];
+                _items.Add(v);
+                
             }
 
             InitializeComponent();
@@ -204,15 +222,23 @@ namespace JDP
             if (e.IsSelected)
             {
                 FlvSpecs flvSpecs = new FlvSpecs(_binPath);
-                var t = e.Item.SubItems[0].Text;
+                if(e.Item.Tag != null)
+                {
+                    var c = e.Item.Tag as TimeInfo;
+                    long offset = long.Parse(c.offset);
+                    if(offset != -1)
+                    {
+                        FlvTag tag = new FlvTag();
+                        flvSpecs.parseTag(offset, ref tag);
+                        FillTagTreeView(ref tag);
+                        FillDetailTreeView(ref tag);
+                        FillBinaryDataView(ref tag);
+                    }
+                }
+/*                var t = e.Item.SubItems[0].Text;
                 int idx = int.Parse(t);
                 var v = _records[idx];
-                long offset = long.Parse(v.offset);
-                FlvTag tag = new FlvTag();
-                flvSpecs.parseTag(offset, ref tag);
-                FillTagTreeView(ref tag);
-                FillDetailTreeView(ref tag);
-                FillBinaryDataView(ref tag);
+                long offset = long.Parse(v.offset);*/
             }
         }
 
