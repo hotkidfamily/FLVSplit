@@ -156,13 +156,6 @@ namespace JDP
                 root.Nodes.Add(aNode);
             }
 
-/*            if (tag.data != null)
-            {
-                TreeNode dNode = new TreeNode("Data");
-                dNode.Nodes.Add("Data: " + BitConverter.ToString(tag.data));
-                root.Nodes.Add(dNode);
-            }*/
-
             root.Nodes.Add("Preview Tag Size: " + tag.previousTagSize);
             tagTreeView.Nodes.Add(root);
             tagTreeView.ExpandAll();
@@ -185,28 +178,8 @@ namespace JDP
         {
             if (tag.data != null)
             {
-                //codecEditbox.Clear();
-                /*                string nal = BitConverter.ToString(tag.data, 0, Math.Min(tag.data.Count<byte>(), 72));
-
-                                string tagText = nal.Substring(0, 33);
-                                string videoTagText = nal.Substring(33, 14);
-                                string nalText = nal.Substring(47, nal.Length - 47);
-
-                                // 构造Rtf格式的文本
-                                string rtfText = "{\\rtf1\\ansi\\deff0 {\\colortbl;\\red255\\green0\\blue0;\\red0\\green200\\blue40;\\red0\\green0\\blue0;}"; // 开始标记，定义颜色表
-                                rtfText += $"{{\\cf1 {tagText}}}";
-                                rtfText += $"{{\\cf2 {videoTagText}}}";
-                                rtfText += $"{{\\cf0 {nalText}}}";
-                                rtfText += "}"; // 结束标记*/
-
-                // 在RichTextBox控件中显示Rtf格式的文本
-                //codecEditbox.Rtf = rtfText;
-
-                /*                dataHexviewer.ResetText();
-                                dataHexviewer.SetBytes(tag.data);*/
                 DynamicByteProvider provider = new DynamicByteProvider(tag.data);
                 dataViewer.ByteProvider = provider;
-                
             }
         }
 
@@ -228,6 +201,64 @@ namespace JDP
         private void frmTimeinfo_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void tagTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if(e.Button == MouseButtons.Left)
+            {
+            }
+        }
+
+        private void onlyVideoRatioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (onlyVideoRatioButton.Checked)
+            {
+                _items = new List<ListViewItem>();
+                for (int i = 0; i < _records.Count(); i++)
+                {
+                    if (_records[i].tagType == "9")
+                    {
+                        _items.Add(new ListViewItem(new string[] { i.ToString(), _records[i].offset, _records[i].tagType == "9" ? "📽":"🔈", _records[i].tagSize, _records[i].dts,
+                        _records[i].dtsStep, _records[i].pts, _records[i].composTime, }));
+                    }
+                }
+                lvTime.VirtualListSize = _items.Count;
+                lvTime.Refresh();
+            }
+        }
+
+        private void onlyAudioFrames_CheckedChanged(object sender, EventArgs e)
+        {
+            if (onlyAudioRatioButton.Checked)
+            {
+                _items = new List<ListViewItem>();
+                for (int i = 0; i < _records.Count(); i++)
+                {
+                    if (_records[i].tagType == "8")
+                    {
+                        _items.Add(new ListViewItem(new string[] { i.ToString(), _records[i].offset, _records[i].tagType == "9" ? "📽":"🔈", _records[i].tagSize, _records[i].dts,
+                        _records[i].dtsStep, _records[i].pts, _records[i].composTime, }));
+                    }
+                }
+                lvTime.VirtualListSize = _items.Count;
+                lvTime.Refresh();
+            }
+        }
+
+        private void fileFramesRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (fileFramesRadioButton.Checked)
+            {
+                _items = new List<ListViewItem>();
+                for (int i = 0; i < _records.Count(); i++)
+                {
+                    _items.Add(new ListViewItem(new string[] { i.ToString(), _records[i].offset, _records[i].tagType == "9" ? "📽":"🔈", _records[i].tagSize, _records[i].dts,
+                    _records[i].dtsStep, _records[i].pts, _records[i].composTime, }));
+                }
+                lvTime.VirtualListSize = _items.Count;
+                lvTime.Refresh();
+            }
         }
     }
 }

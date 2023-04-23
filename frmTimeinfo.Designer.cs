@@ -30,7 +30,7 @@ namespace JDP
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode16 = new System.Windows.Forms.TreeNode("Tag");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Tag");
             this.lvTime = new System.Windows.Forms.ListView();
             this.ch_frameIdx = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch_offset_hex = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -47,6 +47,10 @@ namespace JDP
             this.detailGroupBox = new System.Windows.Forms.GroupBox();
             this.detailTreeView = new System.Windows.Forms.TreeView();
             this.framesGroupBox = new System.Windows.Forms.GroupBox();
+            this.onlyAudioRatioButton = new System.Windows.Forms.RadioButton();
+            this.onlyVideoRatioButton = new System.Windows.Forms.RadioButton();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.fileFramesRadioButton = new System.Windows.Forms.RadioButton();
             this.tagDetailGroupBox.SuspendLayout();
             this.dataGroupBox.SuspendLayout();
             this.detailGroupBox.SuspendLayout();
@@ -68,7 +72,7 @@ namespace JDP
             this.lvTime.FullRowSelect = true;
             this.lvTime.GridLines = true;
             this.lvTime.HideSelection = false;
-            this.lvTime.Location = new System.Drawing.Point(6, 25);
+            this.lvTime.Location = new System.Drawing.Point(6, 55);
             this.lvTime.Name = "lvTime";
             this.lvTime.Size = new System.Drawing.Size(880, 440);
             this.lvTime.TabIndex = 0;
@@ -123,9 +127,9 @@ namespace JDP
             // 
             this.tagDetailGroupBox.AutoSize = true;
             this.tagDetailGroupBox.Controls.Add(this.tagTreeView);
-            this.tagDetailGroupBox.Location = new System.Drawing.Point(903, 477);
+            this.tagDetailGroupBox.Location = new System.Drawing.Point(903, 516);
             this.tagDetailGroupBox.Name = "tagDetailGroupBox";
-            this.tagDetailGroupBox.Size = new System.Drawing.Size(415, 337);
+            this.tagDetailGroupBox.Size = new System.Drawing.Size(415, 363);
             this.tagDetailGroupBox.TabIndex = 3;
             this.tagDetailGroupBox.TabStop = false;
             this.tagDetailGroupBox.Text = "Tag Detail";
@@ -136,20 +140,21 @@ namespace JDP
             this.tagTreeView.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tagTreeView.Location = new System.Drawing.Point(6, 26);
             this.tagTreeView.Name = "tagTreeView";
-            treeNode16.Name = "Tag";
-            treeNode16.Text = "Tag";
+            treeNode3.Name = "Tag";
+            treeNode3.Text = "Tag";
             this.tagTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode16});
-            this.tagTreeView.Size = new System.Drawing.Size(403, 299);
+            treeNode3});
+            this.tagTreeView.Size = new System.Drawing.Size(403, 312);
             this.tagTreeView.TabIndex = 0;
+            this.tagTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tagTreeView_NodeMouseClick);
             // 
             // dataGroupBox
             // 
             this.dataGroupBox.AutoSize = true;
             this.dataGroupBox.Controls.Add(this.dataViewer);
-            this.dataGroupBox.Location = new System.Drawing.Point(0, 478);
+            this.dataGroupBox.Location = new System.Drawing.Point(0, 517);
             this.dataGroupBox.Name = "dataGroupBox";
-            this.dataGroupBox.Size = new System.Drawing.Size(897, 336);
+            this.dataGroupBox.Size = new System.Drawing.Size(897, 362);
             this.dataGroupBox.TabIndex = 4;
             this.dataGroupBox.TabStop = false;
             this.dataGroupBox.Text = "Data";
@@ -164,7 +169,7 @@ namespace JDP
             this.dataViewer.Name = "dataViewer";
             this.dataViewer.ReadOnly = true;
             this.dataViewer.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
-            this.dataViewer.Size = new System.Drawing.Size(880, 298);
+            this.dataViewer.Size = new System.Drawing.Size(880, 311);
             this.dataViewer.StringViewVisible = true;
             this.dataViewer.TabIndex = 0;
             this.dataViewer.UseFixedBytesPerLine = true;
@@ -174,9 +179,9 @@ namespace JDP
             // 
             this.detailGroupBox.AutoSize = true;
             this.detailGroupBox.Controls.Add(this.detailTreeView);
-            this.detailGroupBox.Location = new System.Drawing.Point(903, 0);
+            this.detailGroupBox.Location = new System.Drawing.Point(902, 0);
             this.detailGroupBox.Name = "detailGroupBox";
-            this.detailGroupBox.Size = new System.Drawing.Size(416, 490);
+            this.detailGroupBox.Size = new System.Drawing.Size(416, 520);
             this.detailGroupBox.TabIndex = 4;
             this.detailGroupBox.TabStop = false;
             this.detailGroupBox.Text = "Detail";
@@ -187,26 +192,66 @@ namespace JDP
             this.detailTreeView.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.detailTreeView.Location = new System.Drawing.Point(7, 26);
             this.detailTreeView.Name = "detailTreeView";
-            this.detailTreeView.Size = new System.Drawing.Size(403, 439);
+            this.detailTreeView.Size = new System.Drawing.Size(403, 469);
             this.detailTreeView.TabIndex = 0;
             // 
             // framesGroupBox
             // 
             this.framesGroupBox.AutoSize = true;
+            this.framesGroupBox.Controls.Add(this.fileFramesRadioButton);
+            this.framesGroupBox.Controls.Add(this.onlyAudioRatioButton);
+            this.framesGroupBox.Controls.Add(this.onlyVideoRatioButton);
             this.framesGroupBox.Controls.Add(this.lvTime);
             this.framesGroupBox.Location = new System.Drawing.Point(0, 0);
             this.framesGroupBox.Name = "framesGroupBox";
-            this.framesGroupBox.Size = new System.Drawing.Size(897, 471);
+            this.framesGroupBox.Size = new System.Drawing.Size(897, 520);
             this.framesGroupBox.TabIndex = 5;
             this.framesGroupBox.TabStop = false;
             this.framesGroupBox.Text = "Frames";
+            // 
+            // onlyAudioRatioButton
+            // 
+            this.onlyAudioRatioButton.AutoSize = true;
+            this.onlyAudioRatioButton.Location = new System.Drawing.Point(144, 25);
+            this.onlyAudioRatioButton.Name = "onlyAudioRatioButton";
+            this.onlyAudioRatioButton.Size = new System.Drawing.Size(46, 23);
+            this.onlyAudioRatioButton.TabIndex = 2;
+            this.onlyAudioRatioButton.TabStop = true;
+            this.onlyAudioRatioButton.Text = "🔊";
+            this.onlyAudioRatioButton.UseVisualStyleBackColor = true;
+            this.onlyAudioRatioButton.CheckedChanged += new System.EventHandler(this.onlyAudioFrames_CheckedChanged);
+            // 
+            // onlyVideoRatioButton
+            // 
+            this.onlyVideoRatioButton.AutoSize = true;
+            this.onlyVideoRatioButton.Location = new System.Drawing.Point(75, 25);
+            this.onlyVideoRatioButton.Name = "onlyVideoRatioButton";
+            this.onlyVideoRatioButton.Size = new System.Drawing.Size(46, 23);
+            this.onlyVideoRatioButton.TabIndex = 1;
+            this.onlyVideoRatioButton.TabStop = true;
+            this.onlyVideoRatioButton.Text = "📽️";
+            this.onlyVideoRatioButton.UseVisualStyleBackColor = true;
+            this.onlyVideoRatioButton.CheckedChanged += new System.EventHandler(this.onlyVideoRatioButton_CheckedChanged);
+            // 
+            // fileFramesRadioButton
+            // 
+            this.fileFramesRadioButton.AutoSize = true;
+            this.fileFramesRadioButton.Checked = true;
+            this.fileFramesRadioButton.Location = new System.Drawing.Point(6, 25);
+            this.fileFramesRadioButton.Name = "fileFramesRadioButton";
+            this.fileFramesRadioButton.Size = new System.Drawing.Size(46, 23);
+            this.fileFramesRadioButton.TabIndex = 3;
+            this.fileFramesRadioButton.TabStop = true;
+            this.fileFramesRadioButton.Text = "🎞️";
+            this.fileFramesRadioButton.UseVisualStyleBackColor = true;
+            this.fileFramesRadioButton.CheckedChanged += new System.EventHandler(this.fileFramesRadioButton_CheckedChanged);
             // 
             // frmTimeinfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1324, 821);
+            this.ClientSize = new System.Drawing.Size(1327, 887);
             this.Controls.Add(this.tagDetailGroupBox);
             this.Controls.Add(this.framesGroupBox);
             this.Controls.Add(this.detailGroupBox);
@@ -224,6 +269,7 @@ namespace JDP
             this.dataGroupBox.ResumeLayout(false);
             this.detailGroupBox.ResumeLayout(false);
             this.framesGroupBox.ResumeLayout(false);
+            this.framesGroupBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -248,5 +294,9 @@ namespace JDP
         private System.Windows.Forms.TreeView detailTreeView;
         private System.ComponentModel.Design.ByteViewer dataHexviewer;
         private Be.Windows.Forms.HexBox dataViewer;
+        private System.Windows.Forms.RadioButton onlyVideoRatioButton;
+        private System.Windows.Forms.RadioButton onlyAudioRatioButton;
+        private System.Windows.Forms.RadioButton fileFramesRadioButton;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
