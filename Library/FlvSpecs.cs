@@ -519,7 +519,7 @@ namespace JDP.Library
             return "";
         }
 
-private string videoTagFrameType(uint v)
+        private string videoTagFrameType(uint v)
         {
             string[] types = new string[]
             {

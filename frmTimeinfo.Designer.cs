@@ -30,7 +30,7 @@ namespace JDP
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Tag");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Tag");
             this.lvTime = new System.Windows.Forms.ListView();
             this.ch_frameIdx = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch_offset_hex = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -51,6 +51,8 @@ namespace JDP
             this.onlyAudioRatioButton = new System.Windows.Forms.RadioButton();
             this.onlyVideoRatioButton = new System.Windows.Forms.RadioButton();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.ch_pkgType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.nextKeyFrameButton = new System.Windows.Forms.Button();
             this.tagDetailGroupBox.SuspendLayout();
             this.dataGroupBox.SuspendLayout();
             this.detailGroupBox.SuspendLayout();
@@ -64,6 +66,7 @@ namespace JDP
             this.ch_offset_hex,
             this.ch_tag_type,
             this.ch_tag_size,
+            this.ch_pkgType,
             this.ch_dts,
             this.ch_dts_diff,
             this.ch_pts,
@@ -73,6 +76,7 @@ namespace JDP
             this.lvTime.GridLines = true;
             this.lvTime.HideSelection = false;
             this.lvTime.Location = new System.Drawing.Point(6, 55);
+            this.lvTime.MultiSelect = false;
             this.lvTime.Name = "lvTime";
             this.lvTime.Size = new System.Drawing.Size(880, 440);
             this.lvTime.TabIndex = 0;
@@ -97,11 +101,11 @@ namespace JDP
             // 
             // ch_tag_type
             // 
-            this.ch_tag_type.Text = "Tag Type";
+            this.ch_tag_type.Text = "tag type";
             // 
             // ch_tag_size
             // 
-            this.ch_tag_size.Text = "Tag Size";
+            this.ch_tag_size.Text = "tag size";
             // 
             // ch_dts
             // 
@@ -140,10 +144,10 @@ namespace JDP
             this.tagTreeView.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tagTreeView.Location = new System.Drawing.Point(6, 26);
             this.tagTreeView.Name = "tagTreeView";
-            treeNode2.Name = "Tag";
-            treeNode2.Text = "Tag";
+            treeNode4.Name = "Tag";
+            treeNode4.Text = "Tag";
             this.tagTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
+            treeNode4});
             this.tagTreeView.Size = new System.Drawing.Size(403, 312);
             this.tagTreeView.TabIndex = 0;
             // 
@@ -198,6 +202,7 @@ namespace JDP
             // framesGroupBox
             // 
             this.framesGroupBox.AutoSize = true;
+            this.framesGroupBox.Controls.Add(this.nextKeyFrameButton);
             this.framesGroupBox.Controls.Add(this.fileFramesRadioButton);
             this.framesGroupBox.Controls.Add(this.onlyAudioRatioButton);
             this.framesGroupBox.Controls.Add(this.onlyVideoRatioButton);
@@ -248,6 +253,20 @@ namespace JDP
             this.onlyVideoRatioButton.Text = "📽️";
             this.onlyVideoRatioButton.UseVisualStyleBackColor = true;
             this.onlyVideoRatioButton.CheckedChanged += new System.EventHandler(this.onlyVideoRatioButton_CheckedChanged);
+            // 
+            // ch_pkgType
+            // 
+            this.ch_pkgType.Text = "packet type";
+            // 
+            // nextKeyFrameButton
+            // 
+            this.nextKeyFrameButton.Location = new System.Drawing.Point(215, 15);
+            this.nextKeyFrameButton.Name = "nextKeyFrameButton";
+            this.nextKeyFrameButton.Size = new System.Drawing.Size(87, 34);
+            this.nextKeyFrameButton.TabIndex = 4;
+            this.nextKeyFrameButton.Text = "Next Key";
+            this.nextKeyFrameButton.UseVisualStyleBackColor = true;
+            this.nextKeyFrameButton.Click += new System.EventHandler(this.nextKeyFrameButton_Click);
             // 
             // frmTimeinfo
             // 
@@ -300,5 +319,7 @@ namespace JDP
         private System.Windows.Forms.RadioButton onlyAudioRatioButton;
         private System.Windows.Forms.RadioButton fileFramesRadioButton;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.ColumnHeader ch_pkgType;
+        private System.Windows.Forms.Button nextKeyFrameButton;
     }
 }
