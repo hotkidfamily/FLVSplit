@@ -30,7 +30,7 @@ namespace JDP
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Tag");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Tag");
             this.lvTime = new System.Windows.Forms.ListView();
             this.ch_frameIdx = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch_offset_hex = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -140,10 +140,10 @@ namespace JDP
             this.tagTreeView.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tagTreeView.Location = new System.Drawing.Point(6, 26);
             this.tagTreeView.Name = "tagTreeView";
-            treeNode1.Name = "Tag";
-            treeNode1.Text = "Tag";
+            treeNode2.Name = "Tag";
+            treeNode2.Text = "Tag";
             this.tagTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode2});
             this.tagTreeView.Size = new System.Drawing.Size(403, 312);
             this.tagTreeView.TabIndex = 0;
             // 
@@ -213,9 +213,10 @@ namespace JDP
             // 
             this.fileFramesRadioButton.AutoSize = true;
             this.fileFramesRadioButton.Checked = true;
-            this.fileFramesRadioButton.Location = new System.Drawing.Point(6, 25);
+            this.fileFramesRadioButton.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fileFramesRadioButton.Location = new System.Drawing.Point(11, 15);
             this.fileFramesRadioButton.Name = "fileFramesRadioButton";
-            this.fileFramesRadioButton.Size = new System.Drawing.Size(46, 23);
+            this.fileFramesRadioButton.Size = new System.Drawing.Size(60, 34);
             this.fileFramesRadioButton.TabIndex = 3;
             this.fileFramesRadioButton.TabStop = true;
             this.fileFramesRadioButton.Text = "🎞️";
@@ -225,9 +226,10 @@ namespace JDP
             // onlyAudioRatioButton
             // 
             this.onlyAudioRatioButton.AutoSize = true;
-            this.onlyAudioRatioButton.Location = new System.Drawing.Point(144, 25);
+            this.onlyAudioRatioButton.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.onlyAudioRatioButton.Location = new System.Drawing.Point(149, 15);
             this.onlyAudioRatioButton.Name = "onlyAudioRatioButton";
-            this.onlyAudioRatioButton.Size = new System.Drawing.Size(46, 23);
+            this.onlyAudioRatioButton.Size = new System.Drawing.Size(60, 34);
             this.onlyAudioRatioButton.TabIndex = 2;
             this.onlyAudioRatioButton.TabStop = true;
             this.onlyAudioRatioButton.Text = "🔊";
@@ -237,9 +239,10 @@ namespace JDP
             // onlyVideoRatioButton
             // 
             this.onlyVideoRatioButton.AutoSize = true;
-            this.onlyVideoRatioButton.Location = new System.Drawing.Point(75, 25);
+            this.onlyVideoRatioButton.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.onlyVideoRatioButton.Location = new System.Drawing.Point(80, 15);
             this.onlyVideoRatioButton.Name = "onlyVideoRatioButton";
-            this.onlyVideoRatioButton.Size = new System.Drawing.Size(46, 23);
+            this.onlyVideoRatioButton.Size = new System.Drawing.Size(60, 34);
             this.onlyVideoRatioButton.TabIndex = 1;
             this.onlyVideoRatioButton.TabStop = true;
             this.onlyVideoRatioButton.Text = "📽️";
