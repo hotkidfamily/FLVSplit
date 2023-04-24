@@ -22,8 +22,27 @@ This library is a PCL port of the FlvExtract library from J.D. Purcell (http://m
 
 
 
+## USAGE
+
+- start
+
+![start](docs\start.png)
+
+- result
+
+![result](E:\My-Proj\FLVExtract\docs\result.png)
+
+- hexview
+
+![hexview](E:\My-Proj\FLVExtract\docs\hexview.png)
+
+
 ## changelog
 
+- 2.1.0(2023/4/24)
+  - feat: add time stamp information 
+  - feat: add hex view for per Flv Tag
+  - feat: key frame jump for video Tag
 - 1.7.0 (2023/4/14)
   - feat: add HVCCDecoderConfigurationRecord support
   - UI: big fonts
