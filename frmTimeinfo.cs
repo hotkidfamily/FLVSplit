@@ -86,7 +86,6 @@ namespace JDP
             {
                 var v = new ListViewItem(new string[] { _records[i].indx, _records[i].offset, _records[i].tagType == "9" ? "📽":"🔊", _records[i].tagSize, _records[i].dts,
                     _records[i].dtsStep, _records[i].pts, _records[i].composTime}) ;
-                v.Tag = _records[i];
                 _items.Add(v);
                 
             }
@@ -222,11 +221,10 @@ namespace JDP
             if (e.IsSelected)
             {
                 FlvSpecs flvSpecs = new FlvSpecs(_binPath);
-                var idx = e.ItemIndex;
-                
-                if(_items[idx].Tag != null)
+                int idx = int.Parse(e.Item.Text) - 1;
+
                 {
-                    var c = _items[idx].Tag as TimeInfo;
+                    var c = _records[idx];
                     long offset = long.Parse(c.offset);
                     if(offset != -1)
                     {
@@ -254,8 +252,9 @@ namespace JDP
                 {
                     if (_records[i].tagType == "9")
                     {
-                        _items.Add(new ListViewItem(new string[] { i.ToString(), _records[i].offset, _records[i].tagType == "9" ? "📽":"🔈", _records[i].tagSize, _records[i].dts,
-                        _records[i].dtsStep, _records[i].pts, _records[i].composTime}));
+                        var v = new ListViewItem(new string[] { _records[i].indx, _records[i].offset, "📽", _records[i].tagSize, _records[i].dts,
+                    _records[i].dtsStep, _records[i].pts, _records[i].composTime});
+                        _items.Add(v);
                     }
                 }
                 lvTime.VirtualListSize = _items.Count;
@@ -272,8 +271,9 @@ namespace JDP
                 {
                     if (_records[i].tagType == "8")
                     {
-                        _items.Add(new ListViewItem(new string[] { i.ToString(), _records[i].offset, _records[i].tagType == "9" ? "📽":"🔈", _records[i].tagSize, _records[i].dts,
-                        _records[i].dtsStep, _records[i].pts, _records[i].composTime}));
+                        var v = new ListViewItem(new string[] { _records[i].indx, _records[i].offset, "🔊", _records[i].tagSize, _records[i].dts,
+                    _records[i].dtsStep, _records[i].pts, _records[i].composTime});
+                        _items.Add(v);
                     }
                 }
                 lvTime.VirtualListSize = _items.Count;
@@ -288,8 +288,9 @@ namespace JDP
                 _items = new List<ListViewItem>();
                 for (int i = 0; i < _records.Count(); i++)
                 {
-                    _items.Add(new ListViewItem(new string[] { i.ToString(), _records[i].offset, _records[i].tagType == "9" ? "📽":"🔈", _records[i].tagSize, _records[i].dts,
-                    _records[i].dtsStep, _records[i].pts, _records[i].composTime}));
+                    var v = new ListViewItem(new string[] { _records[i].indx, _records[i].offset, _records[i].tagType == "9" ? "📽":"🔊", _records[i].tagSize, _records[i].dts,
+                    _records[i].dtsStep, _records[i].pts, _records[i].composTime});
+                    _items.Add(v);
                 }
                 lvTime.VirtualListSize = _items.Count;
                 lvTime.Refresh();

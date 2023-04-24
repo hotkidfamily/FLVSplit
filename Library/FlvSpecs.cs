@@ -342,7 +342,6 @@ namespace JDP.Library
                     detail.v.NaluDetails[nalus++] = new NaluDetail() { type = naltype, offset = offset };
                     offset += len;
                 }
-                detail.v.NALUs = nalus;
             }
             else
             { // Video data
@@ -363,8 +362,8 @@ namespace JDP.Library
                     if (offset + len > data.Length) break;
                     offset += len;
                 }
-                detail.v.NALUs = nalus;
             }
+            detail.v.NALUs = nalus;
 
             return true;
         }
