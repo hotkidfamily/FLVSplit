@@ -30,11 +30,11 @@ This library is a PCL port of the FlvExtract library from J.D. Purcell (http://m
 
 - result
 
-![result](E:\My-Proj\FLVExtract\docs\result.png)
+![result](docs\result.png)
 
 - hexview
 
-![hexview](E:\My-Proj\FLVExtract\docs\hexview.png)
+![hexview](hexview.png)
 
 
 ## changelog
