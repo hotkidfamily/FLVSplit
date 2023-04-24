@@ -26,15 +26,15 @@ This library is a PCL port of the FlvExtract library from J.D. Purcell (http://m
 
 - start
 
-![start](docs\start.png)
+![start](docs/start.png)
 
 - result
 
-![result](docs\result.png)
+![result](docs/result.png)
 
 - hexview
 
-![hexview](hexview.png)
+![hexview](docs/hexview.png)
 
 
 ## changelog
