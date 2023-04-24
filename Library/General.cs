@@ -24,7 +24,7 @@ using System.Reflection;
 
 namespace JDP {
 	public static class VersionInfo {
-		public const string AssemblyVersion = "2.0.0.2";
+		public const string AssemblyVersion = "2.1.0.0";
 		public const string CopyrightYears = "2006-2015£¬2018~2023";
 		public const string Website = "http://www.moitah.net/";
 		public const string Authors = " J.D. Purcell, hotkid";
