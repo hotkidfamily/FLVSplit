@@ -23,16 +23,30 @@ namespace JDP
         private List<ListViewItem> _items = null;
         public class TimeInfo
         {
-            public string indx { get; set; }
-            public string offset { get; set; }
-            public string tagType { get; set; }
-            public string tagSize { get; set; }
-            public string pkgType { get; set; }
-            public string codecType { get; set; }
-            public string dts { get; set; }
-            public string dtsStep { get; set; }
-            public string pts { get; set; }
-            public string composTime { get; set; }
+            public int indx { get; set; }
+            public int offset { get; set; }
+            public int tagType { get; set; }
+            public int tagSize { get; set; }
+            public int pkgType { get; set; }
+            public int codecType { get; set; }
+            public int dts { get; set; }
+            public int dtsStep { get; set; }
+            public int pts { get; set; }
+            public int composTime { get; set; }
+
+            public TimeInfo()
+            {
+                indx = -1;
+                offset = -1;
+                tagType = -1;
+                tagSize = -1;
+                pkgType = -1;
+                codecType = -1;
+                dts = -1;
+                dtsStep = -1;
+                pts = -1;
+                composTime = -1;
+            }
         }
 
         class TimeinfoMap : ClassMap<TimeInfo>
@@ -81,8 +95,7 @@ namespace JDP
 
             if (_records == null || _records.Count == 0) 
             {
-                _records = new List<TimeInfo>();
-                _records.Add(new TimeInfo() { indx = "-1", offset = "-1", tagType = "x", tagSize = "-1", pkgType = "-1", codecType = "-1", dts = "-1", dtsStep = "-1", pts = "-1", composTime = "-1" });
+                _records = new List<TimeInfo>() { new TimeInfo()};
             }
 
             _items = new List<ListViewItem>();
@@ -226,21 +239,20 @@ namespace JDP
         {
             if (e.IsSelected)
             {
-                FlvSpecs flvSpecs = new FlvSpecs(_binPath);
-                int idx = int.Parse(e.Item.Text) - 1;
+                var item = e.Item;
+                TimeInfo ti = null;
+                if (e.Item.Tag != null)
+                    ti = e.Item.Tag as TimeInfo;
 
-                if(idx >= 0)
+                if ( ti != null && ti.offset != -1)
                 {
-                    var c = _records[idx];
-                    long offset = long.Parse(c.offset);
-                    if(offset != -1)
-                    {
-                        FlvTag tag = new FlvTag();
-                        flvSpecs.parseTag(offset, ref tag);
-                        FillTagTreeView(ref tag);
-                        FillDetailTreeView(ref tag);
-                        FillBinaryDataView(ref tag);
-                    }
+                    FlvSpecs flvSpecs = new FlvSpecs(_binPath);
+
+                    FlvTag tag = new FlvTag();
+                    flvSpecs.parseTag(ti.offset, ref tag);
+                    FillTagTreeView(ref tag);
+                    FillDetailTreeView(ref tag);
+                    FillBinaryDataView(ref tag);
                 }
             }
         }
@@ -259,7 +271,7 @@ namespace JDP
                 _items = new List<ListViewItem>();
                 for (int i = 0; i < _records.Count(); i++)
                 {
-                    if (_records[i].tagType == "9")
+                    if (_records[i].tagType == 9)
                     {
                         var record = _records[i];
                         var v = _makeListViewItem(ref record);
@@ -279,7 +291,7 @@ namespace JDP
                 _items = new List<ListViewItem>();
                 for (int i = 0; i < _records.Count(); i++)
                 {
-                    if (_records[i].tagType == "8")
+                    if (_records[i].tagType == 8)
                     {
                         var record = _records[i];
                         var v = _makeListViewItem(ref record);
@@ -331,15 +343,18 @@ namespace JDP
             if(lvTime.SelectedIndices.Count > 0)
             {
                 idx = lvTime.SelectedIndices[0];
-             }
-
-            var nidx = _items.FindIndex(idx+1, elem => elem.SubItems[4].Text == "key frame ");
-            if (nidx > 0)
-            {
-                lvTime.Items[nidx].Selected = true;
-                lvTime.Items[nidx].Focused = true;
-                lvTime.Items[nidx].EnsureVisible();
             }
+
+            if(_items.Count > idx) {
+                var nidx = _items.FindIndex(idx + 1, elem => (elem.Tag as TimeInfo)?.pkgType == 1 && elem.Tag != null);
+                if (nidx != -1)
+                {
+                    lvTime.Items[nidx].Selected = true;
+                    lvTime.Items[nidx].Focused = true;
+                    lvTime.Items[nidx].EnsureVisible();
+                }
+            }
+
         }
 
         private ListViewItem _makeListViewItem(ref TimeInfo record)
@@ -347,22 +362,24 @@ namespace JDP
             string codecid;
             string packetType;
             string tagType;
-            if (record.tagType == "9")
+            if (record.tagType == 9)
             {
-                codecid = FlvSpecs.strVideoCodecID(uint.Parse(record.codecType));
-                packetType = FlvSpecs.strVideoTagFrameType(uint.Parse(record.pkgType));
+                codecid = FlvSpecs.strVideoCodecID((uint)record.codecType);
+                packetType = FlvSpecs.strVideoTagFrameType((uint)record.pkgType);
                 tagType = "📽";
             }
             else
             {
-                codecid = FlvSpecs.strSoundFormat(uint.Parse(record.codecType));
+                codecid = FlvSpecs.strSoundFormat((uint)record.codecType);
                 packetType = "🔊";
                 tagType = "🔊";
             }
 
             var v = new ListViewItem(new string[] {
-                    record.indx, record.offset, tagType, record.tagSize,
-                    packetType, codecid, record.dts,record.dtsStep, record.pts, record.composTime});
+                    record.indx.ToString(), record.offset.ToString(), tagType, record.tagSize.ToString(),
+                    packetType, codecid, record.dts.ToString(), record.dtsStep.ToString(), record.pts.ToString(), record.composTime.ToString()});
+
+            v.Tag = record;
 
             return v;
         }
