@@ -28,6 +28,7 @@ namespace JDP
             public string tagType { get; set; }
             public string tagSize { get; set; }
             public string pkgType { get; set; }
+            public string codecType { get; set; }
             public string dts { get; set; }
             public string dtsStep { get; set; }
             public string pts { get; set; }
@@ -43,6 +44,7 @@ namespace JDP
                 Map(m => m.tagType).Name("tagType");
                 Map(m => m.tagSize).Name("tagSize");
                 Map(m => m.pkgType).Name("pkgType");
+                Map(m => m.codecType).Name("codecType");
                 Map(m => m.dts).Name("dts");
                 Map(m => m.dtsStep).Name("dts-step");
                 Map(m => m.pts).Name("pts");
@@ -80,21 +82,22 @@ namespace JDP
             if (_records == null || _records.Count == 0) 
             {
                 _records = new List<TimeInfo>();
-                _records.Add(new TimeInfo() { indx = "-1", offset = "-1", tagType = "x", tagSize = "-1", pkgType = "-1", dts = "-1", dtsStep = "-1", pts = "-1", composTime = "-1" });
+                _records.Add(new TimeInfo() { indx = "-1", offset = "-1", tagType = "x", tagSize = "-1", pkgType = "-1", codecType = "-1", dts = "-1", dtsStep = "-1", pts = "-1", composTime = "-1" });
             }
 
             _items = new List<ListViewItem>();
             for (int i = 0; i < _records.Count(); i++)
             {
-                var v = new ListViewItem(new string[] { 
-                    _records[i].indx, _records[i].offset, _records[i].tagType == "9" ? "📽":"🔊", _records[i].tagSize,
-                    _records[i].pkgType, _records[i].dts,_records[i].dtsStep, _records[i].pts, _records[i].composTime});
+                var record = _records[i];
+                var v = _makeListViewItem(ref record);
                 _items.Add(v);
                 
             }
 
             InitializeComponent();
         }
+
+        
 
         private void frmTimeinfo_Shown(object sender, EventArgs e)
         {
@@ -226,7 +229,7 @@ namespace JDP
                 FlvSpecs flvSpecs = new FlvSpecs(_binPath);
                 int idx = int.Parse(e.Item.Text) - 1;
 
-                if(idx > 0)
+                if(idx >= 0)
                 {
                     var c = _records[idx];
                     long offset = long.Parse(c.offset);
@@ -258,9 +261,8 @@ namespace JDP
                 {
                     if (_records[i].tagType == "9")
                     {
-                        var v = new ListViewItem(new string[] { _records[i].indx, _records[i].offset, "📽",
-                            _records[i].tagSize, _records[i].pkgType, _records[i].dts,
-                            _records[i].dtsStep, _records[i].pts, _records[i].composTime});
+                        var record = _records[i];
+                        var v = _makeListViewItem(ref record);
                         _items.Add(v);
                     }
                 }
@@ -279,9 +281,8 @@ namespace JDP
                 {
                     if (_records[i].tagType == "8")
                     {
-                        var v = new ListViewItem(new string[] { _records[i].indx, _records[i].offset, "🔊", 
-                            _records[i].tagSize, _records[i].dts, _records[i].pkgType,
-                            _records[i].dtsStep, _records[i].pts, _records[i].composTime});
+                        var record = _records[i];
+                        var v = _makeListViewItem(ref record);
                         _items.Add(v);
                     }
                 }
@@ -298,10 +299,8 @@ namespace JDP
                 _items = new List<ListViewItem>();
                 for (int i = 0; i < _records.Count(); i++)
                 {
-                    var v = new ListViewItem(new string[] { 
-                        _records[i].indx, _records[i].offset, _records[i].tagType == "9" ? "📽":"🔊",
-                        _records[i].tagSize, _records[i].pkgType, _records[i].dts,
-                        _records[i].dtsStep, _records[i].pts, _records[i].composTime});
+                    var record = _records[i];
+                    var v = _makeListViewItem(ref record);
                     _items.Add(v);
                 }
                 lvTime.VirtualListSize = _items.Count;
@@ -334,13 +333,38 @@ namespace JDP
                 idx = lvTime.SelectedIndices[0];
              }
 
-            var nidx = _items.FindIndex(idx+1, elem => elem.SubItems[4].Text == "1");
+            var nidx = _items.FindIndex(idx+1, elem => elem.SubItems[4].Text == "key frame ");
             if (nidx > 0)
             {
                 lvTime.Items[nidx].Selected = true;
                 lvTime.Items[nidx].Focused = true;
                 lvTime.Items[nidx].EnsureVisible();
             }
+        }
+
+        private ListViewItem _makeListViewItem(ref TimeInfo record)
+        {
+            string codecid;
+            string packetType;
+            string tagType;
+            if (record.tagType == "9")
+            {
+                codecid = FlvSpecs.strVideoCodecID(uint.Parse(record.codecType));
+                packetType = FlvSpecs.strVideoTagFrameType(uint.Parse(record.pkgType));
+                tagType = "📽";
+            }
+            else
+            {
+                codecid = FlvSpecs.strSoundFormat(uint.Parse(record.codecType));
+                packetType = "🔊";
+                tagType = "🔊";
+            }
+
+            var v = new ListViewItem(new string[] {
+                    record.indx, record.offset, tagType, record.tagSize,
+                    packetType, codecid, record.dts,record.dtsStep, record.pts, record.composTime});
+
+            return v;
         }
     }
 }

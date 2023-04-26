@@ -246,9 +246,9 @@ namespace JDP.Library
 
                 uint frametype = (mediaInfo >> 4) & 0x0f;
                 uint codecID = mediaInfo & 0x0f;
-                detail.v.frametype = videoTagFrameType(frametype) + "[" + frametype + "]";
-                detail.v.codecID = videoCodecID(codecID) + "[" + codecID + "]";
-                detail.v.avcPacketType = videoAVCPacketType(avcPacketType) + "[" + avcPacketType + "]";
+                detail.v.frametype = strVideoTagFrameType(frametype) + "[" + frametype + "]";
+                detail.v.codecID = strVideoCodecID(codecID) + "[" + codecID + "]";
+                detail.v.avcPacketType = strVideoAVCPacketType(avcPacketType) + "[" + avcPacketType + "]";
                 detail.v.compositionTime = compositionTime;
                 Seek(offset);
                 data = ReadBytes((int)dataSize + 11);
@@ -275,8 +275,8 @@ namespace JDP.Library
                     pkttype = ReadUInt8();
                 }
 
-                detail.a.soundFormat = valueToSoundFormat(format) + "[" + format + "]";
-                detail.a.soundRate = valueToSoundSampleRate(rate) + "[" + rate + "]";
+                detail.a.soundFormat = strSoundFormat(format) + "[" + format + "]";
+                detail.a.soundRate = strSoundSampleRate(rate) + "[" + rate + "]";
                 detail.a.soundSize = size == 0? "8bits " : "16bits " + "[" + size + "]";
                 detail.a.soundType = type == 0 ? "Mono " : "Stereo " + "[" + type + "]";
                 detail.a.aacPacketType = pkttype == 0 ? "aac sequence header " : pkttype == 1 ? "aac raw " : " ";
@@ -466,8 +466,22 @@ namespace JDP.Library
             public int v;
             public string desc;
         };
-
-        private string valueToSoundSampleRate(uint v)
+        public static string strAudioTagFrameType(uint type, uint v)
+        {
+            string[] types = new string[]
+            {
+                "AAC sequence header ","AAC raw "
+            };
+            if (v < 2 && type == 10)
+            {
+                return types[v];
+            }
+            else
+            {
+                return "(unknown) ";
+            }
+        }
+        public static string strSoundSampleRate(uint v)
         {
             formatdesc[] descs =
             {
@@ -488,7 +502,7 @@ namespace JDP.Library
             return "";
         }
 
-        private string valueToSoundFormat(uint v)
+        public static string strSoundFormat(uint v)
         {
             formatdesc[] descs =
             {
@@ -502,7 +516,7 @@ namespace JDP.Library
                 new formatdesc() { v = 7, desc = "G.711 A-law logarithmic PCM " },
                 new formatdesc() { v = 8, desc = "G.711 mu-law logarithmic PCM " },
                 new formatdesc() { v = 9, desc = "reserved " },
-                new formatdesc() { v = 10, desc = "AAC " },
+                new formatdesc() { v = 10, desc = "aac " },
                 new formatdesc() { v = 11, desc = "Speex " },
                 new formatdesc() { v = 14, desc = "MP3 8 kHz " },
                 new formatdesc() { v = 15, desc = "Device-specific sound " }
@@ -519,14 +533,14 @@ namespace JDP.Library
             return "";
         }
 
-        private string videoTagFrameType(uint v)
+        public static string strVideoTagFrameType(uint v)
         {
             string[] types = new string[]
             {
-                "key frame (seekable) ",
-                "inter frame (non-seekable) ",
+                "key frame ",
+                "inter frame ",
                 "disposable inter frame (H.263 only) ",
-                "generated key frame (reserved for server use only) ",
+                "generated key frame ",
                 "video info/command frame "
             };
             if(v < 5 && v > 0)
@@ -539,7 +553,7 @@ namespace JDP.Library
             }
         }
 
-        private string videoCodecID(uint v)
+        public static string strVideoCodecID(uint v)
         {
             string[] types = new string[]
             {
@@ -548,8 +562,8 @@ namespace JDP.Library
                 "On2 VP6 ",
                 "On2 VP6 with alpha channel ",
                 "Screen video version 2 ",
-                "AVC ",
-                "HEVC "
+                "h264 ",
+                "h265 "
             };
             if (v < 9 && v > 1)
             {
@@ -557,7 +571,7 @@ namespace JDP.Library
             }
             else if(v == 12)
             {
-                return "HEVC ";
+                return "h265 ";
             }
             else
             {
@@ -565,7 +579,7 @@ namespace JDP.Library
             }
         }
 
-        private string videoAVCPacketType(uint v)
+        public static string strVideoAVCPacketType(uint v)
         {
             string[] types = new string[]
             {
