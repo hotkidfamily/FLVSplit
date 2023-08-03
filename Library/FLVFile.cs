@@ -1130,12 +1130,11 @@ namespace JDP {
 
         public void WriteChunk(byte[] chunk, uint timeStamp, int frameType)
         {
-            if (chunk.Length < 4) return;
+            if (chunk.Length < 8) return;
 
-			int v1 = BitConverter.ToInt32(chunk, 4);
-            int v2 = BitConverter.ToInt32(_startCode, 0);
+			bool annexb = chunk[4] == 0x00 && chunk[5] == 0x00 && chunk[6] == 0x00 && chunk[7] == 0x01;
 
-            if (v1 == v2) // annexb format
+			if (annexb) // annexb format
             {
                 if (chunk[0] == 0)
                 { // Headers vps sps pps 
