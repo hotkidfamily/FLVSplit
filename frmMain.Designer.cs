@@ -50,7 +50,7 @@
 			this.lblInstructions.Name = "lblInstructions";
 			this.lblInstructions.Size = new System.Drawing.Size(471, 70);
 			this.lblInstructions.TabIndex = 0;
-			this.lblInstructions.Text = "✔️\tDrop FLV files here.\r\n✔️把文件丢在这里.\r\n\r\n❗Output files are written in the same fold" +
+			this.lblInstructions.Text = "✔️ Drop FLV files here. ✔️ 把文件丢在这里.\r\n\r\n❗ Output files are written in the same fold" +
     "er as the FLVs.\r\n";
 			this.lblInstructions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
