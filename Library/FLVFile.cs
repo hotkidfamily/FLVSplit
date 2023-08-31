@@ -166,14 +166,34 @@ namespace JDP {
 			_averageFrameRate = CalculateAverageFrameRate();
 			_trueFrameRate = CalculateTrueFrameRate();
 
-            string mp4input = _videoWriter.Path;
+            string videoInput = _videoWriter.Path;
+			string audioInput = _audioWriter.Path;
 
-            CloseOutput(_averageFrameRate, false);
+			CloseOutput(_averageFrameRate, false);
 
 			if (_transCode)
 			{
-                string output = mp4input + ".mp4";
-                string cmd = $"-add {mp4input} -new {output}";
+				string output = _inputPath + ".mp4";
+				string cmd = $"-add {videoInput} -new {output}";
+				bool v = File.Exists(videoInput);
+				bool a = File.Exists(audioInput);
+
+				if (a && v)
+				{
+					cmd = $"-add {videoInput} -add {audioInput} -new {output}";
+				}else if (v)
+				{
+					cmd = $"-add {videoInput} -new {output}";
+				}else if (a)
+				{
+					output = _inputPath + ".m4a";
+					cmd = $"-add {audioInput} -new {output}";
+				}
+				else
+				{
+					return;
+				}
+
 				string dir= Path.GetDirectoryName(_inputPath);
 
 				var proc = new Process
@@ -191,6 +211,7 @@ namespace JDP {
                 };
 
                 proc.Start();
+				proc.WaitForExit();
             }
 		}
 
