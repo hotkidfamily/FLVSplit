@@ -46,7 +46,11 @@ namespace JDP {
 			if ((val = sr.Load("ExtractAudio")) != null) {
 				chkAudio.Checked = (val != "0");
 			}
-		}
+            if ((val = sr.Load("Transcode")) != null)
+            {
+                chkTranscode.Checked = (val != "0");
+            }
+        }
 
 		private void SaveSettings() {
 			SettingsWriter sw = new SettingsWriter("FLV Extract", "settings.txt");
@@ -54,8 +58,9 @@ namespace JDP {
 			sw.Save("ExtractVideo", chkVideo.Checked ? "1" : "0");
 			sw.Save("ExtractTimeCodes", chkTimeCodes.Checked ? "1" : "0");
 			sw.Save("ExtractAudio", chkAudio.Checked ? "1" : "0");
+            sw.Save("Transcode", chkTranscode.Checked ? "1" : "0");
 
-			sw.Close();
+            sw.Close();
 		}
 
 		private void btnAbout_Click(object sender, EventArgs e) {
@@ -84,7 +89,7 @@ namespace JDP {
 				_statusThread = new Thread(delegate() {
 					Invoke((MethodInvoker)delegate() {
 						using (frmStatus statusForm = new frmStatus(paths,
-							chkVideo.Checked, chkAudio.Checked, chkTimeCodes.Checked))
+							chkVideo.Checked, chkAudio.Checked, chkTimeCodes.Checked, chkTranscode.Checked))
 						{
 							bool topMost = TopMost;
 							TopMost = false;

@@ -4,8 +4,6 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using System.Collections.Generic;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
 namespace JDP {
@@ -17,10 +15,11 @@ namespace JDP {
 		private volatile bool _extractVideo;
 		private volatile bool _extractAudio;
 		private volatile bool _extractTimeCodes;
+		private volatile bool _transCode;
 		private bool _overwriteAll;
 		private bool _overwriteNone;
         private Thread _timeThread;
-        public frmStatus(string[] paths, bool extractVideo, bool extractAudio, bool extractTimeCodes) {
+        public frmStatus(string[] paths, bool extractVideo, bool extractAudio, bool extractTimeCodes, bool transcode) {
 			InitializeComponent();
 			int initialWidth = ClientSize.Width;
 			Program.SetFontAndScaling(this);
@@ -33,6 +32,7 @@ namespace JDP {
 			_extractVideo = extractVideo;
 			_extractAudio = extractAudio;
 			_extractTimeCodes = extractTimeCodes;
+            _transCode = transcode;
 
 			ImageList imageList = new ImageList();
 			imageList.ColorDepth = ColorDepth.Depth32Bit;
@@ -147,7 +147,7 @@ namespace JDP {
 
 				try {
 					using (FLVFile flvFile = new FLVFile(_paths[i])) {
-						flvFile.ExtractStreams(_extractAudio, _extractVideo, _extractTimeCodes, PromptOverwrite);
+						flvFile.ExtractStreams(_extractAudio, _extractVideo, _extractTimeCodes, _transCode, PromptOverwrite);
 
 						Invoke((MethodInvoker)delegate() {
 							if (flvFile.TrueFrameRate != null) {
@@ -229,5 +229,6 @@ namespace JDP {
                 btnShowTimestamp.Enabled = e.IsSelected;
             });
         }
+
     }
 }

@@ -26,6 +26,7 @@ namespace JDP {
             this.btnAbout = new System.Windows.Forms.Button();
             this.lblInstructions = new System.Windows.Forms.Label();
             this.grpExtract = new System.Windows.Forms.GroupBox();
+            this.chkTranscode = new System.Windows.Forms.CheckBox();
             this.chkAudio = new System.Windows.Forms.CheckBox();
             this.chkTimeCodes = new System.Windows.Forms.CheckBox();
             this.chkVideo = new System.Windows.Forms.CheckBox();
@@ -53,15 +54,27 @@ namespace JDP {
             // 
             // grpExtract
             // 
+            this.grpExtract.Controls.Add(this.chkTranscode);
             this.grpExtract.Controls.Add(this.chkAudio);
             this.grpExtract.Controls.Add(this.chkTimeCodes);
             this.grpExtract.Controls.Add(this.chkVideo);
             this.grpExtract.Location = new System.Drawing.Point(8, 81);
             this.grpExtract.Name = "grpExtract";
-            this.grpExtract.Size = new System.Drawing.Size(138, 115);
+            this.grpExtract.Size = new System.Drawing.Size(147, 176);
             this.grpExtract.TabIndex = 1;
             this.grpExtract.TabStop = false;
             this.grpExtract.Text = "Extract:";
+            // 
+            // chkTranscode
+            // 
+            this.chkTranscode.Checked = true;
+            this.chkTranscode.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTranscode.Location = new System.Drawing.Point(12, 112);
+            this.chkTranscode.Name = "chkTranscode";
+            this.chkTranscode.Size = new System.Drawing.Size(108, 21);
+            this.chkTranscode.TabIndex = 3;
+            this.chkTranscode.Text = "Transcode";
+            this.chkTranscode.UseVisualStyleBackColor = true;
             // 
             // chkAudio
             // 
@@ -71,7 +84,7 @@ namespace JDP {
             this.chkAudio.Name = "chkAudio";
             this.chkAudio.Size = new System.Drawing.Size(108, 21);
             this.chkAudio.TabIndex = 2;
-            this.chkAudio.Text = "&Audio";
+            this.chkAudio.Text = "Audio";
             this.chkAudio.UseVisualStyleBackColor = true;
             // 
             // chkTimeCodes
@@ -82,7 +95,7 @@ namespace JDP {
             this.chkTimeCodes.Name = "chkTimeCodes";
             this.chkTimeCodes.Size = new System.Drawing.Size(108, 21);
             this.chkTimeCodes.TabIndex = 1;
-            this.chkTimeCodes.Text = "&Timecodes";
+            this.chkTimeCodes.Text = "Timecodes";
             this.chkTimeCodes.UseVisualStyleBackColor = true;
             // 
             // chkVideo
@@ -93,14 +106,14 @@ namespace JDP {
             this.chkVideo.Name = "chkVideo";
             this.chkVideo.Size = new System.Drawing.Size(108, 21);
             this.chkVideo.TabIndex = 0;
-            this.chkVideo.Text = "&Video";
+            this.chkVideo.Text = "Video";
             this.chkVideo.UseVisualStyleBackColor = true;
             // 
             // frmMain
             // 
             this.AllowDrop = true;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(489, 217);
+            this.ClientSize = new System.Drawing.Size(551, 269);
             this.Controls.Add(this.grpExtract);
             this.Controls.Add(this.lblInstructions);
             this.Controls.Add(this.btnAbout);
@@ -128,5 +141,6 @@ namespace JDP {
 		private System.Windows.Forms.CheckBox chkAudio;
 		private System.Windows.Forms.CheckBox chkTimeCodes;
 		private System.Windows.Forms.CheckBox chkVideo;
-	}
+        private System.Windows.Forms.CheckBox chkTranscode;
+    }
 }

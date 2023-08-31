@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Diagnostics;
 
 namespace JDP {
 	internal interface IAudioWriter {
@@ -56,6 +57,7 @@ namespace JDP {
         private bool _extractAudio;
 		private bool _extractVideo;
 		private bool _extractTimeCodes;
+		private bool _transCode;
 		private bool _extractedAudio;
 		private bool _extractedVideo;
 		private bool _extractedTimeCodes;
@@ -112,8 +114,12 @@ namespace JDP {
 		public bool ExtractedTimeCodes {
 			get { return _extractedTimeCodes; }
 		}
+        public bool TransCode
+        {
+            get { return _transCode; }
+        }
 
-		public void ExtractStreams(bool extractAudio, bool extractVideo, bool extractTimeCodes, OverwriteDelegate overwrite) {
+        public void ExtractStreams(bool extractAudio, bool extractVideo, bool extractTimeCodes, bool transCode, OverwriteDelegate overwrite) {
 			uint dataOffset, flags, prevTagSize;
 
 			_outputPathBase = Path.Combine(_outputDirectory, Path.GetFileNameWithoutExtension(_inputPath));
@@ -121,6 +127,7 @@ namespace JDP {
 			_extractAudio = extractAudio;
 			_extractVideo = extractVideo;
 			_extractTimeCodes = extractTimeCodes;
+			_transCode = transCode;
 			_videoTimeStamps = new List<uint>();
             _audioTimeStamps = new List<uint>();
 
@@ -159,7 +166,32 @@ namespace JDP {
 			_averageFrameRate = CalculateAverageFrameRate();
 			_trueFrameRate = CalculateTrueFrameRate();
 
-			CloseOutput(_averageFrameRate, false);
+            string mp4input = _videoWriter.Path;
+
+            CloseOutput(_averageFrameRate, false);
+
+			if (_transCode)
+			{
+                string output = mp4input + ".mp4";
+                string cmd = $"-add {mp4input} -new {output}";
+				string dir= Path.GetDirectoryName(_inputPath);
+
+				var proc = new Process
+                {
+					
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = @"mp4box.exe",
+                        Arguments = cmd,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true,
+                        WorkingDirectory = dir
+                    }
+                };
+
+                proc.Start();
+            }
 		}
 
 		private void CloseOutput(FractionUInt32? averageFrameRate, bool disposing) {

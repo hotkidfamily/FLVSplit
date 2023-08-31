@@ -32,6 +32,7 @@ namespace JDP {
 			bool extractVideo = false;
 			bool extractAudio = false;
 			bool extractTimeCodes = false;
+			bool transcode = false;
 			string outputDirectory = null;
 			string inputPath;
 
@@ -88,7 +89,7 @@ namespace JDP {
 					if (outputDirectory != null) {
 						flvFile.OutputDirectory = Path.GetFullPath(outputDirectory);
 					}
-					flvFile.ExtractStreams(extractAudio, extractVideo, extractTimeCodes, PromptOverwrite);
+					flvFile.ExtractStreams(extractAudio, extractVideo, extractTimeCodes, transcode, PromptOverwrite);
 					if ((flvFile.TrueFrameRate != null) || (flvFile.AverageFrameRate != null)) {
 						if (flvFile.TrueFrameRate != null) {
 							Console.WriteLine("True Frame Rate: " + flvFile.TrueFrameRate.ToString());
