@@ -166,43 +166,51 @@ namespace JDP {
 			_averageFrameRate = CalculateAverageFrameRate();
 			_trueFrameRate = CalculateTrueFrameRate();
 
-            string videoInput = _videoWriter.Path;
-			string audioInput = _audioWriter.Path;
+            string videoInput = _videoWriter?.Path;
+			string audioInput = _audioWriter?.Path;
 
 			CloseOutput(_averageFrameRate, false);
 
 			if (_transCode)
 			{
+				string commander = "mp4box";
 				string output = _inputPath + ".mp4";
-				string cmd = $"-add {videoInput} -new {output}";
-				bool v = File.Exists(videoInput);
-				bool a = File.Exists(audioInput);
+				string args = "";
+				bool v = videoInput != null && File.Exists(videoInput);
+				bool a = audioInput != null && File.Exists(audioInput);
 
 				if (a && v)
 				{
-					cmd = $"-add {videoInput} -add {audioInput} -new {output}";
+					args = $"-add {videoInput} -add {audioInput} -new {output}";
 				}else if (v)
 				{
-					cmd = $"-add {videoInput} -new {output}";
+					args = $"-add {videoInput} -new {output}";
 				}else if (a)
 				{
 					output = _inputPath + ".m4a";
-					cmd = $"-add {audioInput} -new {output}";
+					args = $"-add {audioInput} -new {output}";
 				}
 				else
 				{
 					return;
 				}
 
-				string dir= Path.GetDirectoryName(_inputPath);
+				/*
+				{
+					commander = "ffmpeg";
+					args = $"-i {videoInput} -i {audioInput} -c copy -y {output}";
+				}
+				*/
+
+				string dir = Path.GetDirectoryName(_inputPath);
 
 				var proc = new Process
                 {
 					
                     StartInfo = new ProcessStartInfo
                     {
-                        FileName = @"mp4box.exe",
-                        Arguments = cmd,
+                        FileName = commander,
+                        Arguments = args,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         CreateNoWindow = true,
