@@ -25,68 +25,68 @@ using System.IO;
 using System.Text;
 
 namespace JDP {
-	internal static class SettingsShared {
-		public static string GetMyAppDataDir(string appName) {
-			string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-			string myAppDataDir = Path.Combine(appDataDir, appName);
+    internal static class SettingsShared {
+        public static string GetMyAppDataDir(string appName) {
+            string appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string myAppDataDir = Path.Combine(appDataDir, appName);
 
-			if (Directory.Exists(myAppDataDir) == false) {
-				Directory.CreateDirectory(myAppDataDir);
-			}
+            if (Directory.Exists(myAppDataDir) == false) {
+                Directory.CreateDirectory(myAppDataDir);
+            }
 
-			return myAppDataDir;
-		}
-	}
+            return myAppDataDir;
+        }
+    }
 
-	internal class SettingsReader {
-		private Dictionary<string, string> _settings;
+    internal class SettingsReader {
+        private Dictionary<string, string> _settings;
 
-		public SettingsReader(string appName, string fileName) {
-			_settings = new Dictionary<string, string>();
+        public SettingsReader(string appName, string fileName) {
+            _settings = new Dictionary<string, string>();
 
-			string path = Path.Combine(SettingsShared.GetMyAppDataDir(appName), fileName);
-			if (!File.Exists(path)) {
-				return;
-			}
+            string path = Path.Combine(SettingsShared.GetMyAppDataDir(appName), fileName);
+            if (!File.Exists(path)) {
+                return;
+            }
 
-			using (StreamReader sr = new StreamReader(path, Encoding.UTF8)) {
-				string line, name, val;
-				int pos;
+            using (StreamReader sr = new StreamReader(path, Encoding.UTF8)) {
+                string line, name, val;
+                int pos;
 
-				while ((line = sr.ReadLine()) != null) {
-					pos = line.IndexOf('=');
-					if (pos != -1) {
-						name = line.Substring(0, pos);
-						val = line.Substring(pos + 1);
+                while ((line = sr.ReadLine()) != null) {
+                    pos = line.IndexOf('=');
+                    if (pos != -1) {
+                        name = line.Substring(0, pos);
+                        val = line.Substring(pos + 1);
 
-						if (!_settings.ContainsKey(name)) {
-							_settings.Add(name, val);
-						}
-					}
-				}
-			}
-		}
+                        if (!_settings.ContainsKey(name)) {
+                            _settings.Add(name, val);
+                        }
+                    }
+                }
+            }
+        }
 
-		public string Load(string name) {
-			return _settings.ContainsKey(name) ? _settings[name] : null;
-		}
-	}
+        public string Load(string name) {
+            return _settings.ContainsKey(name) ? _settings[name] : null;
+        }
+    }
 
-	internal class SettingsWriter {
-		private StreamWriter _sw;
+    internal class SettingsWriter {
+        private StreamWriter _sw;
 
-		public SettingsWriter(string appName, string fileName) {
-			string path = Path.Combine(SettingsShared.GetMyAppDataDir(appName), fileName);
+        public SettingsWriter(string appName, string fileName) {
+            string path = Path.Combine(SettingsShared.GetMyAppDataDir(appName), fileName);
 
-			_sw = new StreamWriter(path, false, Encoding.UTF8);
-		}
+            _sw = new StreamWriter(path, false, Encoding.UTF8);
+        }
 
-		public void Save(string name, string value) {
-			_sw.WriteLine(name + "=" + value);
-		}
+        public void Save(string name, string value) {
+            _sw.WriteLine(name + "=" + value);
+        }
 
-		public void Close() {
-			_sw.Close();
-		}
-	}
+        public void Close() {
+            _sw.Close();
+        }
+    }
 }
