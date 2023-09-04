@@ -30,14 +30,9 @@ namespace JDP
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("Tag");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Tag");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTimeinfo));
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.onlyVideoRatioButton = new System.Windows.Forms.RadioButton();
-            this.onlyAudioRatioButton = new System.Windows.Forms.RadioButton();
-            this.fileFramesRadioButton = new System.Windows.Forms.RadioButton();
-            this.nextKeyFrameButton = new System.Windows.Forms.Button();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.dataViewer = new Be.Windows.Forms.HexBox();
             this.tagTreeView = new System.Windows.Forms.TreeView();
             this.lvTime = new System.Windows.Forms.ListView();
@@ -52,80 +47,17 @@ namespace JDP
             this.ch_pts = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch_pts_minus_dts = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.detailTreeView = new System.Windows.Forms.TreeView();
-            this.framesGroupBox = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.framesGroupBox.SuspendLayout();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.onlyVideoRatioButton = new System.Windows.Forms.RadioButton();
+            this.onlyAudioRatioButton = new System.Windows.Forms.RadioButton();
+            this.fileFramesRadioButton = new System.Windows.Forms.RadioButton();
+            this.nextKeyFrameButton = new System.Windows.Forms.Button();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // onlyVideoRatioButton
-            // 
-            this.onlyVideoRatioButton.AutoSize = true;
-            this.onlyVideoRatioButton.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.onlyVideoRatioButton.Location = new System.Drawing.Point(80, 15);
-            this.onlyVideoRatioButton.Name = "onlyVideoRatioButton";
-            this.onlyVideoRatioButton.Size = new System.Drawing.Size(60, 34);
-            this.onlyVideoRatioButton.TabIndex = 1;
-            this.onlyVideoRatioButton.TabStop = true;
-            this.onlyVideoRatioButton.Text = "📽️";
-            this.onlyVideoRatioButton.UseVisualStyleBackColor = true;
-            this.onlyVideoRatioButton.CheckedChanged += new System.EventHandler(this.onlyVideoRatioButton_CheckedChanged);
-            // 
-            // onlyAudioRatioButton
-            // 
-            this.onlyAudioRatioButton.AutoSize = true;
-            this.onlyAudioRatioButton.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.onlyAudioRatioButton.Location = new System.Drawing.Point(149, 15);
-            this.onlyAudioRatioButton.Name = "onlyAudioRatioButton";
-            this.onlyAudioRatioButton.Size = new System.Drawing.Size(60, 34);
-            this.onlyAudioRatioButton.TabIndex = 2;
-            this.onlyAudioRatioButton.TabStop = true;
-            this.onlyAudioRatioButton.Text = "🔊";
-            this.onlyAudioRatioButton.UseVisualStyleBackColor = true;
-            this.onlyAudioRatioButton.CheckedChanged += new System.EventHandler(this.onlyAudioFrames_CheckedChanged);
-            // 
-            // fileFramesRadioButton
-            // 
-            this.fileFramesRadioButton.AutoSize = true;
-            this.fileFramesRadioButton.Checked = true;
-            this.fileFramesRadioButton.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fileFramesRadioButton.Location = new System.Drawing.Point(11, 15);
-            this.fileFramesRadioButton.Name = "fileFramesRadioButton";
-            this.fileFramesRadioButton.Size = new System.Drawing.Size(60, 34);
-            this.fileFramesRadioButton.TabIndex = 3;
-            this.fileFramesRadioButton.TabStop = true;
-            this.fileFramesRadioButton.Text = "🎞️";
-            this.fileFramesRadioButton.UseVisualStyleBackColor = true;
-            this.fileFramesRadioButton.CheckedChanged += new System.EventHandler(this.fileFramesRadioButton_CheckedChanged);
-            // 
-            // nextKeyFrameButton
-            // 
-            this.nextKeyFrameButton.Location = new System.Drawing.Point(215, 15);
-            this.nextKeyFrameButton.Name = "nextKeyFrameButton";
-            this.nextKeyFrameButton.Size = new System.Drawing.Size(87, 34);
-            this.nextKeyFrameButton.TabIndex = 4;
-            this.nextKeyFrameButton.Text = "Next Key";
-            this.nextKeyFrameButton.UseVisualStyleBackColor = true;
-            this.nextKeyFrameButton.Click += new System.EventHandler(this.nextKeyFrameButton_Click);
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 65F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35F));
-            this.tableLayoutPanel1.Controls.Add(this.dataViewer, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.tagTreeView, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.lvTime, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.detailTreeView, 1, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(11, 55);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 65F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 35F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1304, 653);
-            this.tableLayoutPanel1.TabIndex = 5;
             // 
             // dataViewer
             // 
@@ -136,11 +68,11 @@ namespace JDP
             this.dataViewer.Font = new System.Drawing.Font("Monaco", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dataViewer.HexCasing = Be.Windows.Forms.HexCasing.Lower;
             this.dataViewer.LineInfoVisible = true;
-            this.dataViewer.Location = new System.Drawing.Point(3, 427);
+            this.dataViewer.Location = new System.Drawing.Point(3, 441);
             this.dataViewer.Name = "dataViewer";
             this.dataViewer.ReadOnly = true;
             this.dataViewer.ShadowSelectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(60)))), ((int)(((byte)(188)))), ((int)(((byte)(255)))));
-            this.dataViewer.Size = new System.Drawing.Size(841, 223);
+            this.dataViewer.Size = new System.Drawing.Size(900, 183);
             this.dataViewer.StringViewVisible = true;
             this.dataViewer.TabIndex = 0;
             this.dataViewer.UseFixedBytesPerLine = true;
@@ -153,13 +85,13 @@ namespace JDP
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tagTreeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tagTreeView.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tagTreeView.Location = new System.Drawing.Point(850, 427);
+            this.tagTreeView.Location = new System.Drawing.Point(3, 379);
             this.tagTreeView.Name = "tagTreeView";
-            treeNode8.Name = "Tag";
-            treeNode8.Text = "Tag";
+            treeNode1.Name = "Tag";
+            treeNode1.Text = "Tag";
             this.tagTreeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode8});
-            this.tagTreeView.Size = new System.Drawing.Size(451, 223);
+            treeNode1});
+            this.tagTreeView.Size = new System.Drawing.Size(379, 245);
             this.tagTreeView.TabIndex = 0;
             // 
             // lvTime
@@ -185,7 +117,7 @@ namespace JDP
             this.lvTime.Location = new System.Drawing.Point(3, 3);
             this.lvTime.MultiSelect = false;
             this.lvTime.Name = "lvTime";
-            this.lvTime.Size = new System.Drawing.Size(841, 418);
+            this.lvTime.Size = new System.Drawing.Size(900, 432);
             this.lvTime.TabIndex = 0;
             this.lvTime.UseCompatibleStateImageBehavior = false;
             this.lvTime.View = System.Windows.Forms.View.Details;
@@ -250,40 +182,128 @@ namespace JDP
             | System.Windows.Forms.AnchorStyles.Right)));
             this.detailTreeView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.detailTreeView.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.detailTreeView.Location = new System.Drawing.Point(850, 3);
+            this.detailTreeView.Location = new System.Drawing.Point(3, 3);
             this.detailTreeView.Name = "detailTreeView";
-            this.detailTreeView.Size = new System.Drawing.Size(451, 418);
+            this.detailTreeView.Size = new System.Drawing.Size(379, 370);
             this.detailTreeView.TabIndex = 0;
             this.detailTreeView.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.detailTreeView_NodeMouseClick);
             // 
-            // framesGroupBox
+            // tableLayoutPanel2
             // 
-            this.framesGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tableLayoutPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.framesGroupBox.AutoSize = true;
-            this.framesGroupBox.Controls.Add(this.tableLayoutPanel1);
-            this.framesGroupBox.Controls.Add(this.nextKeyFrameButton);
-            this.framesGroupBox.Controls.Add(this.fileFramesRadioButton);
-            this.framesGroupBox.Controls.Add(this.onlyAudioRatioButton);
-            this.framesGroupBox.Controls.Add(this.onlyVideoRatioButton);
-            this.framesGroupBox.Location = new System.Drawing.Point(0, 0);
-            this.framesGroupBox.Name = "framesGroupBox";
-            this.framesGroupBox.Size = new System.Drawing.Size(1321, 733);
-            this.framesGroupBox.TabIndex = 5;
-            this.framesGroupBox.TabStop = false;
-            this.framesGroupBox.Text = "Frames";
+            this.tableLayoutPanel2.ColumnCount = 2;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel4, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 0, 0);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 75);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 1;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1303, 633);
+            this.tableLayoutPanel2.TabIndex = 6;
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel3.ColumnCount = 1;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Controls.Add(this.dataViewer, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.lvTime, 0, 0);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 70F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(906, 627);
+            this.tableLayoutPanel3.TabIndex = 0;
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel4.ColumnCount = 1;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Controls.Add(this.detailTreeView, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.tagTreeView, 0, 1);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(915, 3);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 2;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(385, 627);
+            this.tableLayoutPanel4.TabIndex = 1;
+            // 
+            // onlyVideoRatioButton
+            // 
+            this.onlyVideoRatioButton.AutoSize = true;
+            this.onlyVideoRatioButton.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.onlyVideoRatioButton.Location = new System.Drawing.Point(106, 12);
+            this.onlyVideoRatioButton.Name = "onlyVideoRatioButton";
+            this.onlyVideoRatioButton.Size = new System.Drawing.Size(89, 49);
+            this.onlyVideoRatioButton.TabIndex = 1;
+            this.onlyVideoRatioButton.TabStop = true;
+            this.onlyVideoRatioButton.Text = "📽️";
+            this.onlyVideoRatioButton.UseVisualStyleBackColor = true;
+            this.onlyVideoRatioButton.CheckedChanged += new System.EventHandler(this.onlyVideoRatioButton_CheckedChanged);
+            // 
+            // onlyAudioRatioButton
+            // 
+            this.onlyAudioRatioButton.AutoSize = true;
+            this.onlyAudioRatioButton.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.onlyAudioRatioButton.Location = new System.Drawing.Point(195, 12);
+            this.onlyAudioRatioButton.Name = "onlyAudioRatioButton";
+            this.onlyAudioRatioButton.Size = new System.Drawing.Size(89, 49);
+            this.onlyAudioRatioButton.TabIndex = 2;
+            this.onlyAudioRatioButton.TabStop = true;
+            this.onlyAudioRatioButton.Text = "🔊";
+            this.onlyAudioRatioButton.UseVisualStyleBackColor = true;
+            this.onlyAudioRatioButton.CheckedChanged += new System.EventHandler(this.onlyAudioFrames_CheckedChanged);
+            // 
+            // fileFramesRadioButton
+            // 
+            this.fileFramesRadioButton.AutoSize = true;
+            this.fileFramesRadioButton.Checked = true;
+            this.fileFramesRadioButton.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fileFramesRadioButton.Location = new System.Drawing.Point(17, 12);
+            this.fileFramesRadioButton.Name = "fileFramesRadioButton";
+            this.fileFramesRadioButton.Size = new System.Drawing.Size(89, 49);
+            this.fileFramesRadioButton.TabIndex = 3;
+            this.fileFramesRadioButton.TabStop = true;
+            this.fileFramesRadioButton.Text = "🎞️";
+            this.fileFramesRadioButton.UseVisualStyleBackColor = true;
+            this.fileFramesRadioButton.CheckedChanged += new System.EventHandler(this.fileFramesRadioButton_CheckedChanged);
+            // 
+            // nextKeyFrameButton
+            // 
+            this.nextKeyFrameButton.Location = new System.Drawing.Point(284, 12);
+            this.nextKeyFrameButton.Name = "nextKeyFrameButton";
+            this.nextKeyFrameButton.Size = new System.Drawing.Size(89, 49);
+            this.nextKeyFrameButton.TabIndex = 4;
+            this.nextKeyFrameButton.Text = "Next Key";
+            this.nextKeyFrameButton.UseVisualStyleBackColor = true;
+            this.nextKeyFrameButton.Click += new System.EventHandler(this.nextKeyFrameButton_Click);
             // 
             // frmTimeinfo
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1327, 720);
-            this.Controls.Add(this.framesGroupBox);
+            this.Controls.Add(this.nextKeyFrameButton);
+            this.Controls.Add(this.tableLayoutPanel2);
+            this.Controls.Add(this.fileFramesRadioButton);
+            this.Controls.Add(this.onlyAudioRatioButton);
+            this.Controls.Add(this.onlyVideoRatioButton);
             this.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.MaximumSize = new System.Drawing.Size(2560, 1440);
             this.Name = "frmTimeinfo";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Time Information";
@@ -291,9 +311,9 @@ namespace JDP
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmTimeinfo_FormClosed);
             this.Load += new System.EventHandler(this.frmTimeinfo_Load);
             this.Shown += new System.EventHandler(this.frmTimeinfo_Shown);
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.framesGroupBox.ResumeLayout(false);
-            this.framesGroupBox.PerformLayout();
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -301,11 +321,6 @@ namespace JDP
 
         #endregion
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private System.Windows.Forms.RadioButton onlyVideoRatioButton;
-        private System.Windows.Forms.RadioButton onlyAudioRatioButton;
-        private System.Windows.Forms.RadioButton fileFramesRadioButton;
-        private System.Windows.Forms.Button nextKeyFrameButton;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private Be.Windows.Forms.HexBox dataViewer;
         private System.Windows.Forms.TreeView tagTreeView;
         private System.Windows.Forms.ListView lvTime;
@@ -320,6 +335,12 @@ namespace JDP
         private System.Windows.Forms.ColumnHeader ch_pts;
         private System.Windows.Forms.ColumnHeader ch_pts_minus_dts;
         private System.Windows.Forms.TreeView detailTreeView;
-        private System.Windows.Forms.GroupBox framesGroupBox;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.RadioButton onlyVideoRatioButton;
+        private System.Windows.Forms.RadioButton onlyAudioRatioButton;
+        private System.Windows.Forms.RadioButton fileFramesRadioButton;
+        private System.Windows.Forms.Button nextKeyFrameButton;
     }
 }
