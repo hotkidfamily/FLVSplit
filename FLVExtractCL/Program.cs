@@ -19,6 +19,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // --------------------------------------------------------------------------------
 
+using FFmpeg.AutoGen.Example;
 using System;
 using System.IO;
 
@@ -93,7 +94,7 @@ BreakArgLoop:
                 Console.WriteLine("  -v         Extract video.");
                 Console.WriteLine("  -a         Extract audio.");
                 Console.WriteLine("  -t         Extract timecodes.");
-                Console.WriteLine("  -r         Remuxer to mp4 (FFmpeg should be in \"PATH\", -v or -a or both should be selected).");
+                Console.WriteLine("  -r         Remuxer to mp4 (FFmpeg libraries should be in FFmpeg/bin/x64, -v or -a or both should be selected).");
                 Console.WriteLine("  -o         Overwrite output files without prompting.");
                 Console.WriteLine("  -d <dir>   Output directory.  If not specified, output files will be written");
                 Console.WriteLine("             in the same directory as the source file.");

@@ -147,7 +147,7 @@ namespace JDP {
 			for (int i = 0; (i < _paths.Length) && !_stop; i++) {
 				Invoke((MethodInvoker)delegate() {
 					item = lvStatus.Items.Add(new ListViewItem(new string[] { String.Empty,
-						Path.GetFileName(_paths[i]), String.Empty, String.Empty, String.Empty }));
+						Path.GetFileName(_paths[i]), String.Empty, String.Empty, String.Empty, String.Empty }));
 					item.EnsureVisible();
 				});
 
@@ -218,7 +218,8 @@ namespace JDP {
 
             string binPath = _paths[selectIdx];
             string csvPath = Path.Combine(Path.GetDirectoryName(binPath), Path.GetFileNameWithoutExtension(binPath));
-			if (!File.Exists(csvPath))
+            csvPath = csvPath + ".txt";
+            if (!File.Exists(csvPath))
 			{
 				return;
 			}

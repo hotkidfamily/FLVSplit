@@ -23,7 +23,6 @@ namespace FFmpeg.AutoGen.Example
                         ffmpeg.RootPath = ffmpegBinaryPath;
                         return;
                     }
-
                     current = Directory.GetParent(current)?.FullName;
                 }
             }

@@ -158,6 +158,15 @@ namespace JDP
         {
             FFmpegBinariesHelper.RegisterFFmpegBinaries();
 
+            try
+            {
+                ffmpeg.av_version_info();
+            }
+            catch (Exception)
+            {
+                throw new DllNotFoundException($"FFmpeg Depends Not Found, {outFileName} Not Created.");
+            }
+
 #if DEBUG
             Console.WriteLine("Current directory: " + Environment.CurrentDirectory);
             Console.WriteLine("Running in {0}-bit mode.", Environment.Is64BitProcess ? "64" : "32");
