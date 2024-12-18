@@ -24,7 +24,7 @@ using System;
 namespace JDP
 {
     public static class VersionInfo {
-        public const string AssemblyVersion = "2.4.0.0";
+        public const string AssemblyVersion = "2.4.0.1";
         public const string CopyrightYears = "2006-2015; 2018~2025";
         public const string Website = "http://www.moitah.net/";
         public const string Authors = "J.D. Purcell; hotkidfamily";

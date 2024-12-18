@@ -10,7 +10,7 @@ namespace FFmpeg.AutoGen.Example
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var current = Environment.CurrentDirectory;
+                var current = AppDomain.CurrentDomain.BaseDirectory;
                 var probe = Path.Combine("FFmpeg", "bin", Environment.Is64BitProcess ? "x64" : "x86");
 
                 while (current != null)
